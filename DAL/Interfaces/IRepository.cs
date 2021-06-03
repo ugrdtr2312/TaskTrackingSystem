@@ -9,6 +9,7 @@ namespace DAL.Interfaces
     public interface IRepository<TEntity> where TEntity: BaseEntity
     {
         Task<TEntity> GetByIdAsync(int id);
+        Task<TEntity> GetByIdAsyncAsTracking(int id);
         Task<IEnumerable<TEntity>> GetAllAsync();
         Task<IEnumerable<TEntity>> FindAsync(Func<TEntity, Task<bool>> predicate);
         Task CreateAsync(TEntity entity);

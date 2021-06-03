@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.DependenciesResolvers;
+using API.Infrastructure;
+using API.Infrastructure.Logging;
+using BLL.Helpers.MailHelper;
 using DAL.Contexts;
-using DAL.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace API
 {
@@ -34,11 +29,29 @@ namespace API
             );
             
             services.DalDependenciesResolver(Configuration);
+            services.BllDependenciesResolver(Configuration.GetSection("MailSettings"));
+            
+            services.AddSingleton(AutoMapperConfigure.CreateMapper());
+
+            services.ConfigureIdentityPasswordSettings();
+            services.JwtAuthorizationConfiguration(Configuration);
+           
+            services.AddSingleton<ILog, MyLogger>();
+            
+            services.SwaggerConfigure();
+            
+            /*// In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "../TaskTrackingApp/dist";
+            });*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILog logger)
         {
+            app.ConfigureExceptionHandler(logger);
+            
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
             {
                 if (serviceScope != null)
@@ -47,13 +60,37 @@ namespace API
                     context.Database.Migrate();
                 }
             }
+            
+            //app.UseSpaStaticFiles();
 
+            app.UseAuthentication();
+           
+            app.UseSwagger(c => {c.SerializeAsV2 = true;});
+            
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TaskTrackingAPI");
+                c.RoutePrefix = string.Empty;
+            });
+            
             app.UseRouting();
+            
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
             });
+            
+            /*app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "../TaskTrackingApp";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
+            });*/
         }
     }
 }

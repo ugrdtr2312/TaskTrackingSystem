@@ -22,6 +22,13 @@ namespace DAL.Repositories
 
         public async Task<T> GetByIdAsync(int id)
         {
+            var entity = await DbSetWithAllProperties().AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
+
+            return entity;
+        }
+        
+        public async Task<T> GetByIdAsyncAsTracking(int id)
+        {
             var entity = await DbSetWithAllProperties().FirstOrDefaultAsync(p => p.Id == id);
 
             return entity;
@@ -38,7 +45,7 @@ namespace DAL.Repositories
 
         public async Task<IEnumerable<T>> FindAsync(Func<T, Task<bool>> predicate)
         {
-            var entity = await DbSetWithAllProperties().WhereAsync(predicate);
+            var entity = await DbSetWithAllProperties().AsNoTracking().WhereAsync(predicate);
             
             return entity;
         }

@@ -10,8 +10,6 @@ namespace DAL.Contexts
     {
         public DbSet<Project> Projects { get; set; }
         public DbSet<Task> Tasks { get; set; }
-        public DbSet<TaskPriority> TaskPriority { get; set; }
-        public DbSet<TaskStatus> TaskStatuses { get; set; }
         
         public TaskTrackingSystemContext(DbContextOptions<TaskTrackingSystemContext> options) : base(options)
         {
@@ -23,8 +21,6 @@ namespace DAL.Contexts
             
             modelBuilder.ApplyConfiguration(new ProjectConfiguration());
             modelBuilder.ApplyConfiguration(new TaskConfiguration());
-            modelBuilder.ApplyConfiguration(new TaskPriorityConfiguration());
-            modelBuilder.ApplyConfiguration(new TaskStatusConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             
             BasicSeed.Seed(modelBuilder);

@@ -14,10 +14,8 @@ namespace DAL.Repositories.Realizations
         protected override IQueryable<Task> DbSetWithAllProperties()
         {
             return DbSet
-                .Include(t => t.TaskStatus)
-                .Include(t => t.TaskPriority)
                 .Include(t => t.Project)
-                .Include(t => t.Employee);
+                .Include(t => t.User);
         }
     }
 }

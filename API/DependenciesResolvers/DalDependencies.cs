@@ -24,9 +24,7 @@ namespace API.DependenciesResolvers
             services.AddScoped<IUoW, EfUoW>();
 
             services.AddScoped<IProjectRepository, ProjectRepository>();
-            services.AddScoped<ITaskPriorityRepository, TaskPriorityRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
-            services.AddScoped<ITaskStatusRepository, TaskStatusRepository>();
         }
     }
 }

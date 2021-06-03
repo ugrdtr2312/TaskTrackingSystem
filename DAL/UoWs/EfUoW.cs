@@ -10,22 +10,16 @@ namespace DAL.UoWs
     {
         private readonly DbContext _context;
 
-        public EfUoW(DbContext context, IProjectRepository projectRepository, ITaskRepository taskRepository,
-            ITaskPriorityRepository taskPriorityRepository, ITaskStatusRepository taskStatusRepository)
+        public EfUoW(DbContext context, IProjectRepository projectRepository, ITaskRepository taskRepository)
         {
             _context = context;
             Tasks = taskRepository;
             Projects = projectRepository;
-            TaskPriorities = taskPriorityRepository;
-            TaskStatuses = taskStatusRepository;
         }
        
         public ITaskRepository Tasks { get; }
         public IProjectRepository Projects { get; }
-        public ITaskPriorityRepository TaskPriorities { get; }
-        public ITaskStatusRepository TaskStatuses { get; }
-
-       
+        
         private bool _disposed;
 
         private void Dispose(bool disposing)

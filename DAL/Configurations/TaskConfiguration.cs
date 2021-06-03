@@ -27,14 +27,12 @@ namespace DAL.Configurations
                 .IsRequired();
             
             builder
-                .HasOne(t => t.TaskStatus)
-                .WithMany(ts => ts.Tasks)
-                .OnDelete(DeleteBehavior.Restrict);
+                .Property(c => c.TaskStatus)
+                .HasConversion<string>();
             
             builder
-                .HasOne(t => t.TaskPriority)
-                .WithMany(tp => tp.Tasks)
-                .OnDelete(DeleteBehavior.Restrict);
+                .Property(c => c.TaskPriority)
+                .HasConversion<string>();
             
             builder
                 .HasOne(t => t.Project)
@@ -42,7 +40,7 @@ namespace DAL.Configurations
                 .OnDelete(DeleteBehavior.Restrict);
             
             builder
-                .HasOne(t => t.Employee)
+                .HasOne(t => t.User)
                 .WithMany(u => u.Tasks)
                 .OnDelete(DeleteBehavior.Restrict);
         }
