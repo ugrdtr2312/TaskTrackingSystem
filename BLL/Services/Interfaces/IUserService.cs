@@ -8,11 +8,7 @@ namespace BLL.Services.Interfaces
     {
         Task<bool> IsUserInRoleAsync(int id, string role);
 
-        Task<ICollection<string>> GetRolesAsync(int userId);
-
         Task<SignedInUserDto> SignInAsync(LoginDto loginDto, string tokenKey, int tokenLifetime);
-
-        Task SignOutAsync();
 
         Task<SignedInUserDto> SignUpAsync(RegistrationDto registrationDto, string tokenKey, int tokenLifetime);
 

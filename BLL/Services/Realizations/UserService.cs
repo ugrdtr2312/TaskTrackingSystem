@@ -9,11 +9,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTOs.User;
 using BLL.Exceptions;
+using BLL.HelpModels;
 using BLL.Services.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Task = System.Threading.Tasks.Task;
 
@@ -26,7 +28,7 @@ namespace BLL.Services.Realizations
         private readonly IUoW _uoW;
         private readonly IMapper _mapper;
 
-        public UserService(IMapper mapper, IUoW uoW, SignInManager<User> signInManager, UserManager<User> userManager)
+        public UserService(IMapper mapper, IUoW uoW, SignInManager<User> signInManager, UserManager<User> userManager, IOptions<TokensSettings> mailSettings)
         {
             _mapper = mapper;
             _uoW = uoW;
@@ -112,7 +114,7 @@ namespace BLL.Services.Realizations
 
             var claims = new []
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim("UserId", user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
@@ -131,7 +133,7 @@ namespace BLL.Services.Realizations
                 signingCredentials: signingCredentials,
                 claims: claimsIdentity.Claims,
                 notBefore: utcNow,
-                expires: utcNow.AddMinutes(tokenLifetime)
+                expires: utcNow.AddSeconds(60)
             );
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);

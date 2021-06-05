@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace API.DependenciesResolvers
+namespace API.Helpers
 {
     public static class IdentityConfigurations
     {
@@ -18,7 +18,7 @@ namespace API.DependenciesResolvers
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 4;
+                options.Password.RequiredLength = 1;
             });
         }
 
@@ -31,14 +31,14 @@ namespace API.DependenciesResolvers
                 })
                 .AddJwtBearer(jwtBearerOptions =>
                 {
+                    jwtBearerOptions.SaveToken = true;
                     jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokensSettings:Key"])),
                         ValidateIssuer = false,
                         ValidateAudience = false,
-                        ValidateLifetime = bool.Parse(configuration["TokensSettings:ValidateLifetime"]),
-                        ClockSkew = TimeSpan.FromMinutes(int.Parse(configuration["TokensSettings:ExpiryMinutes"]))
+                        ClockSkew = TimeSpan.Zero
                     };
                 });
         }

@@ -1,4 +1,4 @@
-﻿namespace BLL.Helpers.MailHelper.Entities
+﻿namespace BLL.HelpModels
 {
     public class MailSettings
     {

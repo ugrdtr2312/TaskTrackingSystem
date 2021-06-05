@@ -3,6 +3,7 @@ using DAL.DbSeeds;
 using DAL.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace DAL.Contexts
 {
@@ -13,6 +14,14 @@ namespace DAL.Contexts
         
         public TaskTrackingSystemContext(DbContextOptions<TaskTrackingSystemContext> options) : base(options)
         {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            
+            optionsBuilder.ConfigureWarnings(warnings =>
+                warnings.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

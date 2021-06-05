@@ -5,9 +5,9 @@ namespace BLL.DTOs.Project
 {
     public class AddUserToProjectDto
     {
-        [Required, NotNull]
+        [Required(ErrorMessage = "ProjectId is required and shouldn't be null"), NotNull]
         public int ProjectId { get; set; }
-        [Required, NotNull]
+        [Required(ErrorMessage = "UserId is required and shouldn't be null"), NotNull]
         public int UserId { get; set; }
     }
 }

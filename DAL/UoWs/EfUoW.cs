@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using DAL.Entities;
 using DAL.Interfaces;
 using DAL.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL.UoWs
@@ -10,13 +12,20 @@ namespace DAL.UoWs
     {
         private readonly DbContext _context;
 
-        public EfUoW(DbContext context, IProjectRepository projectRepository, ITaskRepository taskRepository)
+        public EfUoW(DbContext context, IProjectRepository projectRepository, ITaskRepository taskRepository, 
+            UserManager<User> userManager, RoleManager<UserRole> roleManager, SignInManager<User> signInManager)
         {
             _context = context;
+            UserManager = userManager;
+            RoleManager = roleManager;
+            SignInManager = signInManager;
             Tasks = taskRepository;
             Projects = projectRepository;
         }
-       
+        
+        public SignInManager<User> SignInManager { get; }
+        public UserManager<User> UserManager { get; }
+        public RoleManager<UserRole> RoleManager { get; }
         public ITaskRepository Tasks { get; }
         public IProjectRepository Projects { get; }
         

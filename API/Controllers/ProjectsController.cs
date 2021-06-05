@@ -1,158 +1,200 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using API.Helpers;
 using BLL.DTOs.Project;
-using BLL.Exceptions;
 using BLL.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Shared.Roles;
 
 namespace API.Controllers
 {
+    // TODO: change comment below
     /// <summary>
     /// <c>ProjectsController</c> is a class.
     /// Contains all http methods for working with projects.
     /// </summary>
     /// <remarks>
-    /// This class can get, create, delete, edit category and other staff for this entity.
+    /// This class can get, create, remove, edit projects, add users to them, return statistics about tasks in project.
     /// </remarks>
+    /// <response code="401">If token is invalid or it wasn't provided</response>
+    /// <response code="403">If user doesn't have needed credentials</response>
     
     // api/projects
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProjectsController : ControllerBase
     {
         private readonly IProjectService _projectService;
+        private readonly IMailService _mailService;
+        private readonly ILogger<ProjectsController> _logger;
 
-        
-        public ProjectsController(IProjectService projectService)
+        public ProjectsController(IProjectService projectService, IMailService mailService, ILogger<ProjectsController> logger)
         {
             _projectService = projectService;
+            _mailService = mailService;
+            _logger = logger;
         }
-       
-        
+
+
         /// <summary>
         /// This method returns all projects
         /// </summary>
-        /// <response code="200">Returns all categories</response>
+        /// <response code="200">Returns all projects</response>
+        /// <response code="400">Returns message if something had gone wrong</response>
 
-        //GET api/categories
-        [HttpPost("user")]
-        public ActionResult AddUserToProject(AddUserToProjectDto addUserToProjectDto)
+        //GET api/projects
+        [Authorize(Roles = RoleTypes.Admin)]
+        [HttpGet]
+        public async Task<ActionResult> GetAllProjects()
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-                
-                _projectService.AddUserToProject(addUserToProjectDto);
-               
-               return Ok(HttpContext.User.Claims);
-            }
-            catch (DbQueryResultNullException e)
-            {
-                return NotFound(e.Message);
-            }
+            var userId = Convert.ToInt32(User.FindFirstValue("UserId"));
+            _logger.LogInformation("Admin with Id {UserId} got all projects list", userId);
+
+            var projects = await _projectService.GetAllProjectsAsync();
+
+            return Ok(projects);
         }
 
-        
-        /*/// <summary>
-        /// This method returns category that has an inputted Id property
-        /// </summary>
-        /// <response code="200">Returns category that has an inputted Id property</response>
-        /// <response code="404">Returns message that nothing was found, if message wasn't returned than id inputted incorrectly</response>
-        
-        //GET api/categories/{id}
-        [HttpGet("{id:int}", Name = "GetCategoryById")]
-        public async Task<IActionResult> GetCategoryById(int id)
-        {
-            try
-            {
-                var category = await _categoryService.GetByIdAsync(id);
-                return Ok(category);
-            }
-            catch (DbQueryResultNullException e)
-            {
-                return NotFound(e.Message);
-            }
-        }
-        
-        
+
         /// <summary>
-        /// This method returns category that was created and path to it
+        /// This method returns all projects for current user
         /// </summary>
-        /// <response code="201">Returns category that was created and path to it</response>
-        /// <response code="400">Returns message why model is invalid</response>
-        /// <response code="404">Returns message if something had gone wrong</response>
+        /// <response code="200">Returns all projects for current user</response>
+        /// <response code="400">Returns message if something had gone wrong</response>
+        /// <response code="404">Returns message that nothing was found</response>
 
-        //POST api/categories 
+        //GET api/projects/current-user
+        [HttpGet("current-user")]
+        public async Task<IActionResult> GetAllProjectsByUser()
+        {
+            var userId = Convert.ToInt32(User.FindFirstValue("UserId"));
+
+            var projects = await _projectService.GetAllProjectsByUserIdAsync(userId);
+
+            if (!projects.Any()) return NotFound();
+            return Ok(projects);
+        }
+
+
+        /// <summary>
+        /// This method returns project that has an inputted Id property
+        /// </summary>
+        /// <response code="200">Returns project that has an inputted Id property</response>
+        /// <response code="400">Returns message if something had gone wrong</response>
+
+        //GET api/projects/{id}
+        [HttpGet("{id:int}", Name = "GetProjectById")]
+        public async Task<IActionResult> GetProjectById(int id)
+        {
+            var project = await _projectService.GetByIdAsync(id);
+
+            return Ok(project);
+        }
+
+
+        /// <summary>
+        /// This method returns project that was created and path to it
+        /// </summary>
+        /// <response code="201">Returns project that was created and path to it</response>
+        /// <response code="400">Returns message if something had gone wrong</response>
+
+        //POST api/projects
+        [Authorize(Roles = RoleTypes.Manager)]
         [HttpPost]
-        [ProducesResponseType(typeof(CategoryDto), 201)]
-        public async Task<IActionResult> CreateCategory(CategoryDto categoryDto)
+        [ProducesResponseType(typeof(ProjectDto), 201)]
+        public async Task<IActionResult> CreateProject(ProjectCreateDto projectDto)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-                if (categoryDto.Id != 0)
-                    return BadRequest("The Id should be empty");
-               
-                var createdCategory = await _categoryService.CreateAsync(categoryDto);
+            var userId = Convert.ToInt32(User.FindFirstValue("UserId"));
+            _logger.LogInformation("Manager with Id {UserId} wants to create project", userId);
             
-                //Fetch the category from data source
-                return CreatedAtRoute("GetCategoryById", new {id = createdCategory.Id}, createdCategory);
-            }
-            catch (DbQueryResultNullException e)
-            {
-                return NotFound(e.Message);
-            }
+            var createdProject = await _projectService.CreateAsync(projectDto, userId);
+            _logger.LogInformation("Manager with Id {UserId} created project with id {ProjectId}",
+                userId, createdProject.Id);
+            
+            //Fetch the project from data source
+            return CreatedAtRoute("GetProjectById", new {id = createdProject.Id}, createdProject);
         }
-        
+
 
         /// <summary>
-        /// This method changes category
+        /// This method changes project
         /// </summary>
-        /// <response code="204">Returns nothing, category was successfully changed</response>
-        /// <response code="400">Returns message why model is invalid</response>
-        /// <response code="404">Returns message that category was not found, if message wasn't returned than id inputted incorrectly</response>
-        
-        //PUT api/categories
+        /// <response code="204">Returns nothing, project was successfully changed</response>
+        /// <response code="400">Returns message if something had gone wrong</response>
+
+        //PUT api/projects
+        [Authorize(Roles = RoleTypes.Manager)]
         [HttpPut]
         [ProducesResponseType(204)]
-        public IActionResult UpdateCategory(CategoryDto categoryDto)
+        public async Task<IActionResult> UpdateProject(ProjectDto projectDto)
         {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
-                
-                _categoryService.Update(categoryDto);
-                return NoContent();
-            }
-            catch (DbQueryResultNullException e)
-            {
-                return NotFound(e.Message);
-            }
+            var userId = Convert.ToInt32(User.FindFirstValue("UserId"));
+            _logger.LogInformation("Manager with Id {UserId} wants to change project with id {ProjectId}",
+                userId, projectDto.Id);
+
+            await _projectService.UpdateAsync(projectDto, userId);
+
+            _logger.LogInformation("Manager with Id {UserId} changed project with id {ProjectId} successfully",
+                userId, projectDto.Id);
+
+            return NoContent();
         }
-        
-        
+
+
         /// <summary>
-        /// This method deletes category
+        /// This method removes project
         /// </summary>
-        /// <response code="204">Returns nothing, category was successfully deleted</response>
-        /// <response code="404">Returns message that category was not found</response>
-        
-        //DELETE api/categories/{id}
+        /// <response code="204">Returns nothing, project was successfully removed</response>
+        /// <response code="404">Returns message that project was not found</response>
+
+        //DELETE api/projects/{id}
+        [Authorize(Roles = RoleTypes.Manager)]
         [HttpDelete("{id:int}")]
         [ProducesResponseType(204)]
-        public IActionResult DeleteCategory(int id)
+        public async Task<IActionResult> RemoveProject(int id)
         {
-            try
-            {
-                _categoryService.Remove(id);
-                return NoContent();
-            }
-            catch (DbQueryResultNullException e)
-            {
-                return NotFound(e.Message);
-            }
-        }*/
+            var userId = Convert.ToInt32(User.FindFirstValue("UserId"));
+            _logger.LogInformation("Manager with Id {UserId} wants to remove project with id {ProjectId}",
+                userId, id);
+            
+            await _projectService.RemoveAsync(id, userId);
+            _logger.LogInformation("Manager with Id {UserId} removed project with id {ProjectId} and all its tasks successfully",
+                userId, id);
+                
+            return NoContent();
+        }
+
+        
+        /// <summary>
+        /// This method adds user to project and sends email to this person
+        /// </summary>
+        /// <response code="204">Returns nothing, user was successfully added to project</response>
+        /// <response code="400">Returns message if something had gone wrong</response>
+
+        //POST api/projects/user-to-project
+        [Authorize(Roles = RoleTypes.Manager)]
+        [HttpPost("user-to-project")]
+        [ProducesResponseType(204)]
+        public async Task<IActionResult> AddUserToProject(AddUserToProjectDto addUserToProjectDto)
+        {
+            var userId = Convert.ToInt32(User.FindFirstValue("UserId"));
+            _logger.LogInformation(
+                "Manager with Id {UserId} wants to add user with Id {Id} to project with Id {ProjectId}",
+                userId, addUserToProjectDto.UserId, addUserToProjectDto.ProjectId);
+
+            await _projectService.AddUserToProject(addUserToProjectDto, userId);
+            _logger.LogInformation(
+                "Manager with Id {UserId} added user with Id {Id} to project with Id {ProjectId} successfully",
+                userId, addUserToProjectDto.UserId, addUserToProjectDto.ProjectId);
+
+            await _mailService.SendEmailAboutAddingToProjectAsync(addUserToProjectDto);
+            
+            return NoContent();
+        }
     }
 }

@@ -4,14 +4,16 @@ using DAL.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DAL.Migrations
 {
     [DbContext(typeof(TaskTrackingSystemContext))]
-    partial class TaskTrackingSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20210605173310_DeleteBehavior.NoAction set to Task.ProjectId")]
+    partial class DeleteBehaviorNoActionsettoTaskProjectId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -5,17 +5,17 @@ using DAL.Repositories.Interfaces;
 using DAL.Repositories.Realizations;
 using DAL.UoWs;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace API.DependenciesResolvers
+namespace DAL.Injections
 {
-    public static class DalDependencies
+    public static class ServiceCollectionExtensions
     {
-        public static void DalDependenciesResolver(this IServiceCollection services, IConfiguration configuration)
+        public static void AddDalDependencies(this IServiceCollection services, string connectionString)
         {
             services.AddDbContext<TaskTrackingSystemContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("Default")));
+                options.UseSqlServer(connectionString,
+                    o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
  
             services.AddIdentity<User, UserRole>()
                 .AddEntityFrameworkStores<TaskTrackingSystemContext>();

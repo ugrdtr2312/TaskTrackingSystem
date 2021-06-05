@@ -3,10 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace BLL.DTOs.Project
 {
-    public class ProjectDto
+    public class ProjectCreateDto
     {
-        [Required(ErrorMessage = "Id is required")]
-        public int Id { get; set; }
         [Required(ErrorMessage = "Name is required and shouldn't be null"), NotNull]
         public string Name { get; set; }
         [Required(ErrorMessage = "Description is required and shouldn't be null"), NotNull]

@@ -1,7 +1,5 @@
-using API.DependenciesResolvers;
-using API.Infrastructure;
-using API.Infrastructure.Logging;
-using BLL.Helpers.MailHelper;
+using API.Helpers;
+using BLL.Injections;
 using DAL.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,19 +22,17 @@ namespace API
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddNewtonsoftJson(options =>
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-            );
-            
-            services.DalDependenciesResolver(Configuration);
-            services.BllDependenciesResolver(Configuration.GetSection("MailSettings"));
-            
-            services.AddSingleton(AutoMapperConfigure.CreateMapper());
+            services.AddControllers(options =>
+                {
+                    options.Filters.Add(new ApiExceptionFilter());
+                    options.Filters.Add(new ValidateModelAttribute());
+                })
+                .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
 
+            services.AddBusinessDependencies(Configuration);
+            
             services.ConfigureIdentityPasswordSettings();
             services.JwtAuthorizationConfiguration(Configuration);
-           
-            services.AddSingleton<ILog, MyLogger>();
             
             services.SwaggerConfigure();
             
@@ -48,9 +44,10 @@ namespace API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILog logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.ConfigureExceptionHandler(logger);
+           // app.ConfigureExceptionHandler(logger);
+           // app.UseSerilogRequestLogging();
             
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
             {

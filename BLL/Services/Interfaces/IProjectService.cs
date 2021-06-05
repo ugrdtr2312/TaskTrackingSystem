@@ -6,11 +6,12 @@ namespace BLL.Services.Interfaces
 {
     public interface IProjectService
     {
-        Task<IEnumerable<ProjectDto>> GetAllAsync();
+        Task<IEnumerable<ProjectDto>> GetAllProjectsAsync();
+        Task<IEnumerable<ProjectDto>> GetAllProjectsByUserIdAsync(int userId);
         Task<ProjectDto> GetByIdAsync(int id);
-        Task<ProjectDto> CreateAsync(ProjectDto projectDto);
-        void Update(ProjectDto projectDto);
-        void Remove(int id);
-        void AddUserToProject(AddUserToProjectDto addUserToProjectDto);
+        Task<ProjectDto> CreateAsync(ProjectCreateDto projectDto, int userId);
+        Task UpdateAsync(ProjectDto projectDto, int userId);
+        Task RemoveAsync(int projectId, int userId);
+        Task AddUserToProject(AddUserToProjectDto addUserToProjectDto, int userId);
     }
 }

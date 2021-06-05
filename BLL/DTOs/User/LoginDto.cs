@@ -5,9 +5,9 @@ namespace BLL.DTOs.User
 {
     public class LoginDto
     {
-        [Required, NotNull]
+        [Required(ErrorMessage = "UserName is required and shouldn't be null"), NotNull]
         public string UserName { get; set; }
-        [Required, NotNull]
+        [Required(ErrorMessage = "Password is required and shouldn't be null"), NotNull]
         public string Password { get; set; }
     }
 }

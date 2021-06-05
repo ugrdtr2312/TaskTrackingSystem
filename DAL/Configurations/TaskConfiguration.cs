@@ -36,8 +36,7 @@ namespace DAL.Configurations
             
             builder
                 .HasOne(t => t.Project)
-                .WithMany(p => p.Tasks)
-                .OnDelete(DeleteBehavior.Restrict);
+                .WithMany(p => p.Tasks);
             
             builder
                 .HasOne(t => t.User)
