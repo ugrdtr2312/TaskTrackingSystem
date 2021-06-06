@@ -24,20 +24,26 @@ namespace API.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationService _authenticationService;
+        private readonly IMailService _mailService;
         private readonly ILogger<AuthenticationController> _logger;
 
-        public AuthenticationController(ILogger<AuthenticationController> logger, IAuthenticationService authenticationService)
+        public AuthenticationController(ILogger<AuthenticationController> logger, IAuthenticationService authenticationService, IMailService mailService)
         {
             _authenticationService = authenticationService;
+            _mailService = mailService;
             _logger = logger;
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<SignedInUserDto>> Login(LoginDto loginDto)
         {
+            _logger.LogInformation("User with {UserName} trying to sign in", loginDto.UserName);
             
             var signedInUser = await _authenticationService.SignInAsync(loginDto);
-
+            
+            _logger.LogInformation("User with {UserName} signed in in successfully", loginDto.UserName);
+            await _mailService.SendEmailAboutSigningInAsync(loginDto);
+            
             return Ok(signedInUser);
         }
 
@@ -45,6 +51,9 @@ namespace API.Controllers
         public async Task<ActionResult<SignedInUserDto>> Register(RegistrationDto registrationDto)
         {
             var signedInUser = await _authenticationService.SignUpAsync(registrationDto);
+            
+            _logger.LogInformation("User with {UserName} signed up successfully", signedInUser.User.UserName);
+            await _mailService.SendEmailAboutSigningUpAsync(signedInUser.User.Id);
 
             return Ok(signedInUser);
         }

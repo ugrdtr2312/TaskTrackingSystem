@@ -12,9 +12,9 @@ using BLL.HelpModels;
 using BLL.Services.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Roles;
 
 namespace BLL.Services.Realizations
 {
@@ -31,17 +31,25 @@ namespace BLL.Services.Realizations
             _tokensSettings = tokensSettings.Value;
         }
         
+        /*public async Task<bool> IsUserInRoleAsync(int id, string role)
+        {
+            var user = await _userManager.Users.
+                FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+                throw new DbQueryResultNullException("Db query result to users is null");
+
+            return await _userManager.IsInRoleAsync(user, role); 
+        }*/
+        
         public async Task<SignedInUserDto> SignInAsync(LoginDto loginDto)
         {
-            var result = await _uow.SignInManager.PasswordSignInAsync(loginDto.UserName, loginDto.Password, false, false);
-
-            if (!result.Succeeded)
-                throw new InvalidDataException("Failed to sign in user, login data is incorrect"); 
-
             var user = await _uow.UserManager.FindByNameAsync(loginDto.UserName);
             
             if (user == null)
-                throw new DbQueryResultNullException("User with this login doesn't exist");
+                throw new InvalidDataException("User with this login doesn't exist");
+            if ( !await _uow.UserManager.CheckPasswordAsync(user, loginDto.Password))
+                throw new InvalidDataException("This password is incorrect");
             
             var token = await GenerateJwtToken(user);
             var userDto = _mapper.Map<UserDto>(user);
@@ -49,9 +57,22 @@ namespace BLL.Services.Realizations
             return new SignedInUserDto(userDto, token);
         }
 
-        public Task<SignedInUserDto> SignUpAsync(RegistrationDto registrationDto)
+        public async Task<SignedInUserDto> SignUpAsync(RegistrationDto registrationDto)
         {
-            throw new System.NotImplementedException();
+            var user = _mapper.Map<User>(registrationDto);
+
+            var result = await _uow.UserManager.CreateAsync(user, registrationDto.Password);
+            
+            if (!result.Succeeded)
+                throw new InvalidDataException("Failed to create user");
+
+            await _uow.UserManager.AddToRoleAsync(user, RoleTypes.User);
+            await _uow.SaveChangesAsync();
+
+            var token = await GenerateJwtToken(user);
+            var userDto = _mapper.Map<UserDto>(user);
+
+            return new SignedInUserDto(userDto, token);
         }
         
         private async Task<string> GenerateJwtToken(User user)
@@ -64,7 +85,7 @@ namespace BLL.Services.Realizations
             {
                 new Claim("UserId", user.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(new IdentityOptions().ClaimsIdentity.RoleClaimType,roles.FirstOrDefault() ?? string.Empty),
+                new Claim(ClaimTypes.Role,roles.FirstOrDefault() ?? string.Empty),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, utcNow.ToString(CultureInfo.InvariantCulture))

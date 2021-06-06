@@ -10,7 +10,6 @@ namespace DAL.Interfaces
     {
         UserManager<User> UserManager { get; }
         RoleManager<UserRole> RoleManager { get; }
-        SignInManager<User> SignInManager { get; }
         IProjectRepository Projects { get; }
         ITaskRepository Tasks { get; }
         Task<bool> SaveChangesAsync();

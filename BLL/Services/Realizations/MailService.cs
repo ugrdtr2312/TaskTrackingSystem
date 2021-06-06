@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using BLL.DTOs.Project;
+using BLL.DTOs.User;
 using BLL.Exceptions;
 using BLL.Helpers.MailHelper.Entities;
 using BLL.HelpModels;
@@ -11,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MimeKit;
 
-namespace BLL.Helpers.MailHelper
+namespace BLL.Services.Realizations
 {
     public class MailService : IMailService
     {
@@ -56,6 +58,36 @@ namespace BLL.Helpers.MailHelper
                 ToEmail = user.Email,
                 Subject = "You were added to new project",
                 Body = $"Hi! Welcome in {project.Name}!!!"
+            });
+        }
+
+        public async Task SendEmailAboutSigningInAsync(LoginDto loginDto)
+        {
+            var user = await _uow.UserManager.FindByNameAsync(loginDto.UserName);
+            
+            if (user == null)
+                throw new InvalidDataException("User with this login doesn't exist");
+
+            await SendEmailAsync(new MailRequest()
+            {
+                ToEmail = user.Email,
+                Subject = "Account has been logged in",
+                Body = "If it wasn't you than contact admin!!!"
+            });
+        }
+
+        public async Task SendEmailAboutSigningUpAsync(int userId)
+        {
+            var user = await _uow.UserManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            
+            if (user == null)
+                throw new InvalidDataException("User with this login doesn't exist");
+
+            await SendEmailAsync(new MailRequest()
+            {
+                ToEmail = user.Email,
+                Subject = $"Hi, {user.FirstName}! Welcome in our system.",
+                Body = "We are happy that you are a part of us)"
             });
         }
     }

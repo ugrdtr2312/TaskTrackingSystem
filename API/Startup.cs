@@ -1,9 +1,6 @@
 using API.Helpers;
 using BLL.Injections;
-using DAL.Contexts;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -44,21 +41,9 @@ namespace API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public static void Configure(IApplicationBuilder app)
         {
-           // app.ConfigureExceptionHandler(logger);
-           // app.UseSerilogRequestLogging();
-            
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
-            {
-                if (serviceScope != null)
-                {
-                    var context = serviceScope.ServiceProvider.GetRequiredService<TaskTrackingSystemContext>();
-                    context.Database.Migrate();
-                }
-            }
-            
-            //app.UseSpaStaticFiles();
+            app.Migrate();
 
             app.UseAuthentication();
            
