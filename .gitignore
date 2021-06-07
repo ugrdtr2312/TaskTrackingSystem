@@ -1,3 +1,6 @@
+# wwwroot ignored
+API/wwwroot/
+
 # Common IntelliJ Platform excludes
 
 # User specific
