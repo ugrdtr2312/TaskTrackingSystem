@@ -2,7 +2,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserService } from 'src/app/shared/services/user.service';
+import { UserService } from 'src/app/shared/user/user.service';
 
 @Component({
   selector: 'app-login',

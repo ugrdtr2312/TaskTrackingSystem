@@ -1,7 +1,6 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { UserService } from 'src/app/shared/services/user.service';
+import { UserService } from 'src/app/shared/user/user.service';
 
 @Component({
   selector: 'app-registration',
@@ -20,7 +19,6 @@ export class RegistrationComponent implements OnInit {
     this.service.register().subscribe(
       (res: any) => {
           this.service.formModel.reset();
-         
           this.toastr.success('New user created! Now you can try to log in', 'Registration successful.');
       },
       err => {
