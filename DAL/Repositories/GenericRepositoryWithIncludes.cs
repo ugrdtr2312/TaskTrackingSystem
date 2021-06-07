@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DAL.Entities;
-using DAL.Extensions;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Task = System.Threading.Tasks.Task;
@@ -20,6 +19,8 @@ namespace DAL.Repositories
             DbSet = context.Set<T>();
         }
 
+        protected abstract IQueryable<T> DbSetWithAllProperties();
+        
         public async Task<T> GetByIdAsync(int id)
         {
             var entity = await DbSetWithAllProperties().AsNoTracking().FirstOrDefaultAsync(p => p.Id == id);
@@ -36,18 +37,23 @@ namespace DAL.Repositories
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
-            var entities = await DbSetWithAllProperties()
-                .AsNoTracking()
-                .ToListAsync();
+            var entities = await DbSetWithAllProperties().AsNoTracking().ToListAsync();
             
             return entities;
         }
 
-        public async Task<IEnumerable<T>> FindAsync(Func<T, Task<bool>> predicate)
+        public async Task<IEnumerable<T>> GetManyAsync(Expression<Func<T, bool>> expression)
         {
-            var entity = await DbSetWithAllProperties().AsNoTracking().WhereAsync(predicate);
+            var entities = await DbSetWithAllProperties().Where(expression).AsNoTracking().ToListAsync();
             
-            return entity;
+            return entities;
+        }
+
+        public async Task<IEnumerable<T>> GetManyAsTrackingAsync(Expression<Func<T, bool>> expression)
+        {
+            var entities = await DbSetWithAllProperties().Where(expression).ToListAsync();
+            
+            return entities;
         }
 
         public async Task CreateAsync(T entity)
@@ -64,23 +70,5 @@ namespace DAL.Repositories
         {
             DbSet.Update(entity);
         }
-
-        public async Task<IEnumerable<T>> GetWithIncludesAsync(params Expression<Func<T, object>>[] includeProperties)
-        {
-            return await IncludeProperties(includeProperties).ToListAsync();
-        }
-
-        protected abstract IQueryable<T> DbSetWithAllProperties();
-
-        private IQueryable<T> IncludeProperties(params Expression<Func<T, object>>[] includeProperties)
-        {
-            IQueryable<T> query = DbSet;
-
-            foreach (var includeProperty in includeProperties)
-                query = query.Include(includeProperty);
-            
-            return query;
-        }
- 
     }
 }

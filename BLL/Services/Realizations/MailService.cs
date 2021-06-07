@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using BLL.DTOs.Project;
 using BLL.DTOs.User;
 using BLL.Exceptions;
@@ -26,7 +25,6 @@ namespace BLL.Services.Realizations
             _mailSettings = mailSettings.Value;
         }
         
-        
         private async Task SendEmailAsync(MailRequest mailRequest)
         {
             var email = new MimeMessage {Sender = new MailboxAddress(_mailSettings.DisplayName, _mailSettings.Mail)};
@@ -41,14 +39,14 @@ namespace BLL.Services.Realizations
             await smtp.DisconnectAsync(true);
         }
 
-        public async Task SendEmailAboutAddingToProjectAsync(AddUserToProjectDto addUserToProjectDto)
+        public async Task SendEmailAboutAddingToProjectAsync(UserToProjectDto userToProjectDto)
         {
-            var project = await _uow.Projects.GetByIdAsyncAsTracking(addUserToProjectDto.ProjectId);
+            var project = await _uow.Projects.GetByIdAsyncAsTracking(userToProjectDto.ProjectId);
             
             if (project == null)
                 throw new DbQueryResultNullException("This project doesn't exist");
             
-            var user = await _uow.UserManager.Users.FirstOrDefaultAsync(u => u.Id == addUserToProjectDto.UserId);
+            var user = await _uow.UserManager.Users.FirstOrDefaultAsync(u => u.Id == userToProjectDto.UserId);
             
             if (user == null) 
                 throw new DbQueryResultNullException("This user doesn't exist");
@@ -58,6 +56,26 @@ namespace BLL.Services.Realizations
                 ToEmail = user.Email,
                 Subject = "You were added to new project",
                 Body = $"Hi! Welcome in {project.Name}!!!"
+            });
+        }
+
+        public async Task SendEmailRemovingFromProjectAsync(UserToProjectDto userToProjectDto)
+        {
+            var project = await _uow.Projects.GetByIdAsyncAsTracking(userToProjectDto.ProjectId);
+            
+            if (project == null)
+                throw new DbQueryResultNullException("This project doesn't exist");
+            
+            var user = await _uow.UserManager.Users.FirstOrDefaultAsync(u => u.Id == userToProjectDto.UserId);
+            
+            if (user == null) 
+                throw new DbQueryResultNullException("This user doesn't exist");
+
+            await SendEmailAsync(new MailRequest()
+            {
+                ToEmail = user.Email,
+                Subject = "You were removed from project",
+                Body = $"You are not more a part of {project.Name}!!!"
             });
         }
 
@@ -72,7 +90,7 @@ namespace BLL.Services.Realizations
             {
                 ToEmail = user.Email,
                 Subject = "Account has been logged in",
-                Body = "If it wasn't you than contact admin!!!"
+                Body = "If it wasn't you then contact admin!!!"
             });
         }
 

@@ -3,6 +3,7 @@ using DAL.DbSeeds;
 using DAL.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace DAL.Contexts
@@ -33,6 +34,17 @@ namespace DAL.Contexts
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             
             BasicSeed.Seed(modelBuilder);
+        }
+    }
+    
+    public class TaskTrackingSystemContextFactory : IDesignTimeDbContextFactory<TaskTrackingSystemContext>
+    {
+        public TaskTrackingSystemContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<TaskTrackingSystemContext>();
+            optionsBuilder.UseSqlServer("Server=DESKTOP-AB3OQES;Database=TaskTrackingSystemContext;Trusted_Connection=True;");
+
+            return new TaskTrackingSystemContext(optionsBuilder.Options);
         }
     }
 }

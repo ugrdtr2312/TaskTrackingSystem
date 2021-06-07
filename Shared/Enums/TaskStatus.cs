@@ -2,7 +2,7 @@
 {
     public enum TaskStatus
     {
-        Open,
+        Open = 1,
         InProgress,
         Completed,
         OnHold,

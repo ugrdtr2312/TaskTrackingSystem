@@ -1,6 +1,9 @@
-﻿using DAL.Entities;
+﻿using System;
+using DAL.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Shared.Enums;
 
 namespace DAL.Configurations
 {
@@ -28,11 +31,13 @@ namespace DAL.Configurations
             
             builder
                 .Property(c => c.TaskStatus)
-                .HasConversion<string>();
+                .HasConversion<int>()
+                .IsRequired();
             
             builder
                 .Property(c => c.TaskPriority)
-                .HasConversion<string>();
+                .HasConversion<int>()
+                .IsRequired();
             
             builder
                 .HasOne(t => t.Project)
@@ -41,7 +46,7 @@ namespace DAL.Configurations
             builder
                 .HasOne(t => t.User)
                 .WithMany(u => u.Tasks)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

@@ -92,15 +92,13 @@ namespace DAL.Migrations
                     b.Property<int>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<string>("TaskPriority")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("TaskPriority")
+                        .HasColumnType("int");
 
-                    b.Property<string>("TaskStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("TaskStatus")
+                        .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -116,144 +114,144 @@ namespace DAL.Migrations
                         {
                             Id = 1,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 8, 20, 33, 9, 942, DateTimeKind.Local).AddTicks(9709),
+                            Deadline = new DateTime(2021, 6, 9, 18, 51, 59, 921, DateTimeKind.Local).AddTicks(9176),
                             Description = "Task1 description",
                             Name = "Task1",
                             ProjectId = 1,
-                            TaskPriority = "Medium",
-                            TaskStatus = "Open",
+                            TaskPriority = 2,
+                            TaskStatus = 1,
                             UserId = 1
                         },
                         new
                         {
                             Id = 2,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 9, 20, 33, 9, 945, DateTimeKind.Local).AddTicks(9576),
+                            Deadline = new DateTime(2021, 6, 10, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2794),
                             Description = "Task2 description",
                             Name = "Task2",
                             ProjectId = 1,
-                            TaskPriority = "Low",
-                            TaskStatus = "InProgress",
+                            TaskPriority = 1,
+                            TaskStatus = 2,
                             UserId = 1
                         },
                         new
                         {
                             Id = 3,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 6, 20, 33, 9, 945, DateTimeKind.Local).AddTicks(9616),
+                            Deadline = new DateTime(2021, 6, 7, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2823),
                             Description = "Task3 description",
                             Name = "Task3",
                             ProjectId = 1,
-                            TaskPriority = "High",
-                            TaskStatus = "Completed",
+                            TaskPriority = 3,
+                            TaskStatus = 3,
                             UserId = 1
                         },
                         new
                         {
                             Id = 4,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 11, 20, 33, 9, 945, DateTimeKind.Local).AddTicks(9622),
+                            Deadline = new DateTime(2021, 6, 12, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2829),
                             Description = "Task4 description",
                             Name = "Task4",
                             ProjectId = 1,
-                            TaskPriority = "Medium",
-                            TaskStatus = "InProgress",
+                            TaskPriority = 2,
+                            TaskStatus = 2,
                             UserId = 1
                         },
                         new
                         {
                             Id = 5,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 7, 20, 33, 9, 945, DateTimeKind.Local).AddTicks(9626),
+                            Deadline = new DateTime(2021, 6, 8, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2832),
                             Description = "Task5 description",
                             Name = "Task5",
                             ProjectId = 1,
-                            TaskPriority = "Low",
-                            TaskStatus = "Open",
+                            TaskPriority = 1,
+                            TaskStatus = 1,
                             UserId = 2
                         },
                         new
                         {
                             Id = 6,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 9, 20, 33, 9, 945, DateTimeKind.Local).AddTicks(9631),
+                            Deadline = new DateTime(2021, 6, 10, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2834),
                             Description = "Task6 description",
                             Name = "Task6",
                             ProjectId = 1,
-                            TaskPriority = "High",
-                            TaskStatus = "Completed",
+                            TaskPriority = 3,
+                            TaskStatus = 3,
                             UserId = 2
                         },
                         new
                         {
                             Id = 7,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 8, 20, 33, 9, 945, DateTimeKind.Local).AddTicks(9635),
+                            Deadline = new DateTime(2021, 6, 9, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2838),
                             Description = "Task7 description",
                             Name = "Task7",
                             ProjectId = 1,
-                            TaskPriority = "Medium",
-                            TaskStatus = "Open",
+                            TaskPriority = 2,
+                            TaskStatus = 1,
                             UserId = 1
                         },
                         new
                         {
                             Id = 8,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 10, 20, 33, 9, 945, DateTimeKind.Local).AddTicks(9639),
+                            Deadline = new DateTime(2021, 6, 11, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2841),
                             Description = "Task8 description",
                             Name = "Task8",
                             ProjectId = 1,
-                            TaskPriority = "Critical",
-                            TaskStatus = "Open",
+                            TaskPriority = 4,
+                            TaskStatus = 1,
                             UserId = 2
                         },
                         new
                         {
                             Id = 9,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 6, 20, 33, 9, 945, DateTimeKind.Local).AddTicks(9643),
+                            Deadline = new DateTime(2021, 6, 7, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2843),
                             Description = "Task9 description",
                             Name = "Task9",
                             ProjectId = 1,
-                            TaskPriority = "Critical",
-                            TaskStatus = "InProgress",
+                            TaskPriority = 4,
+                            TaskStatus = 2,
                             UserId = 2
                         },
                         new
                         {
                             Id = 10,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 8, 20, 33, 9, 945, DateTimeKind.Local).AddTicks(9648),
+                            Deadline = new DateTime(2021, 6, 9, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2846),
                             Description = "Task10 description",
                             Name = "Task10",
                             ProjectId = 1,
-                            TaskPriority = "Low",
-                            TaskStatus = "OnHold",
+                            TaskPriority = 1,
+                            TaskStatus = 4,
                             UserId = 1
                         },
                         new
                         {
                             Id = 11,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 11, 20, 33, 9, 945, DateTimeKind.Local).AddTicks(9653),
+                            Deadline = new DateTime(2021, 6, 12, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2849),
                             Description = "Task11 description",
                             Name = "Task11",
                             ProjectId = 1,
-                            TaskPriority = "Medium",
-                            TaskStatus = "Cancelled",
+                            TaskPriority = 2,
+                            TaskStatus = 5,
                             UserId = 2
                         },
                         new
                         {
                             Id = 12,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 9, 20, 33, 9, 945, DateTimeKind.Local).AddTicks(9658),
+                            Deadline = new DateTime(2021, 6, 10, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2851),
                             Description = "Task12 description",
                             Name = "Task12",
                             ProjectId = 1,
-                            TaskPriority = "High",
-                            TaskStatus = "InProgress",
+                            TaskPriority = 3,
+                            TaskStatus = 2,
                             UserId = 1
                         });
                 });
@@ -339,16 +337,16 @@ namespace DAL.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "935edc3c-4d98-416b-8832-d231cffe78e8",
+                            ConcurrencyStamp = "ef57e080-2308-49e9-812c-e18fff3d7d3b",
                             Email = "vladimir231200@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Vladimir",
                             LockoutEnabled = false,
                             NormalizedEmail = "VLADIMIR231200@GMAIL.COM",
                             NormalizedUserName = "UGRDTR",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHhs1krJEZFz3QPNgXq5JYuI91r86PyZLkD03A3IxZB+wHp7uKbsDKB9ngw59Jkv5w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEK9bSPDGdmY1L/+ZVXrVyn0+lCBUZFUxdzn6HhgW4U/SFBBe8KlgHXmNFdBiALStNQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ea6cc26e-6c17-494b-b824-38497f195cc9",
+                            SecurityStamp = "9820291d-ab5c-42e5-8e8b-afd2f8293e1a",
                             Surname = "Shengeliya",
                             TwoFactorEnabled = false,
                             UserName = "ugrdtr"
@@ -357,16 +355,16 @@ namespace DAL.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "12e67dcc-b902-4f11-b791-b96600bf4b07",
+                            ConcurrencyStamp = "e8ad7d13-cd80-4028-befa-2652c93c961f",
                             Email = "ns18091@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Nikita",
                             LockoutEnabled = false,
                             NormalizedEmail = "NS18091@GMAIL.COM",
                             NormalizedUserName = "MXXNR1SE",
-                            PasswordHash = "AQAAAAEAACcQAAAAEESaTLux9C4FERZk1cxk17PY61/QR01sXOtjEcfPhRdU5Sm8ja9O01aRAaZOLBQSKg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHpyaRcV/QDVIMP62+rE+SFjcsx1Skk37Sl/hI4wYgOCfeMWeUjzVoQ0qJLClUXRwQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f57f8004-f26f-4d34-8cb7-6719595999e8",
+                            SecurityStamp = "2b405fd5-a5b7-4494-9747-226802529c6f",
                             Surname = "Sidorov",
                             TwoFactorEnabled = false,
                             UserName = "mxxnr1se"
@@ -375,16 +373,16 @@ namespace DAL.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b5e5fed1-c09c-48b7-87b7-a99986cdb64c",
+                            ConcurrencyStamp = "69cc48b7-5ac6-4d3a-b81f-bd86d354abc7",
                             Email = "kochka4real@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Danila",
                             LockoutEnabled = false,
                             NormalizedEmail = "KOCHKA4REAL@GMAIL.COM",
                             NormalizedUserName = "AOLAN13",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPqM7ypXjXM4iGf47t9Ts5AbkAClpCKG2wWeqO4oVXWs+EhN33RZlw4PHwR6C5T5Fw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEO5WxgZBy/F9ITNjfw3yvX1l6EtOBvrTwY9B9sTjbGNh5FtNQZlv2GvIZG71ySk0A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "63d45f0d-2de9-42ee-979c-9903ab51d88f",
+                            SecurityStamp = "b12cada3-2555-4d65-bd07-50e946453dc8",
                             Surname = "Crazy",
                             TwoFactorEnabled = false,
                             UserName = "Aolan13"
@@ -393,16 +391,16 @@ namespace DAL.Migrations
                         {
                             Id = 4,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "83af8664-8b22-4f22-a338-afb46e3516b8",
+                            ConcurrencyStamp = "99d6d5ae-5f61-49ed-a5f6-ef8e2020aa07",
                             Email = "janglaide@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Alison",
                             LockoutEnabled = false,
                             NormalizedEmail = "JANGLAIDE@GMAIL.COM",
                             NormalizedUserName = "JANGLAIDE",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFFaj7DstOow/H9EDRxdRNoa6AookekPu3FnCZSjGC3xycY7BrwXtdC6gCC3/P1NRQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEA/UeK7N10FsE9jxcrFb7nqYNjDPex+L6zy/aL+ULmrw/zMk5gwPa86bWRNjddQ7ow==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c6abe7dc-90b4-4276-84bf-7f05037e284f",
+                            SecurityStamp = "0c1f260e-f306-48b8-bc28-5751b89524f5",
                             Surname = "Proshchenko",
                             TwoFactorEnabled = false,
                             UserName = "janglaide"
@@ -441,21 +439,21 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "5583cba0-c3ad-4389-b88c-71f1618d8a06",
+                            ConcurrencyStamp = "f2e86f69-1a84-40bd-baa7-0ae9ed1ce2de",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "2bfb01d8-a993-4fbd-906c-e8bdb5dff33f",
+                            ConcurrencyStamp = "8d141fa6-5309-4043-9368-1e40354bd84c",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "59eba498-d7e5-4fe1-a916-19a80e57816b",
+                            ConcurrencyStamp = "ab64df49-c7dc-41be-a25c-aa0d0084244e",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -651,14 +649,13 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Entities.Project", "Project")
                         .WithMany("Tasks")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DAL.Entities.User", "User")
                         .WithMany("Tasks")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Project");
 

@@ -6,17 +6,13 @@ using Microsoft.Extensions.Logging;
 
 namespace API.Controllers
 {
-    
-    // TODO: change comment below
     /// <summary>
-    /// <c>ProjectsController</c> is a class.
-    /// Contains all http methods for working with projects.
+    /// <c>AuthenticationController</c> is a class.
+    /// Contains all http methods for working with authentication.
     /// </summary>
     /// <remarks>
-    /// This class can get, create, remove, edit projects, add users to them, return statistics about tasks in project.
+    /// This class avoid to logging in ang registration.
     /// </remarks>
-    /// <response code="401">If token is invalid or it wasn't provided</response>
-    /// <response code="403">If user doesn't have needed credentials</response>
     
     // api/authentication
     [Route("api/[controller]")]
@@ -34,28 +30,44 @@ namespace API.Controllers
             _logger = logger;
         }
 
+        
+        /// <summary>
+        /// This method for logging in
+        /// </summary>
+        /// <response code="200">Returns token</response>
+        /// <response code="400">Returns message if something had gone wrong</response>
+        
+        // api/authentication/login
         [HttpPost("login")]
-        public async Task<ActionResult<SignedInUserDto>> Login(LoginDto loginDto)
+        public async Task<ActionResult> Login(LoginDto loginDto)
         {
             _logger.LogInformation("User with {UserName} trying to sign in", loginDto.UserName);
             
-            var signedInUser = await _authenticationService.SignInAsync(loginDto);
+            var token = await _authenticationService.SignInAsync(loginDto);
             
             _logger.LogInformation("User with {UserName} signed in in successfully", loginDto.UserName);
             await _mailService.SendEmailAboutSigningInAsync(loginDto);
             
-            return Ok(signedInUser);
+            return Ok(new { token });
         }
 
+        
+        /// <summary>
+        /// This method for registration
+        /// </summary>
+        /// <response code="204">Returns nothing, registration was successful</response>
+        /// <response code="400">Returns message if something had gone wrong</response>
+        
+        // api/authentication/registration
         [HttpPost("registration")]
-        public async Task<ActionResult<SignedInUserDto>> Register(RegistrationDto registrationDto)
+        public async Task<ActionResult> Register(RegistrationDto registrationDto)
         {
             var signedInUser = await _authenticationService.SignUpAsync(registrationDto);
             
-            _logger.LogInformation("User with {UserName} signed up successfully", signedInUser.User.UserName);
-            await _mailService.SendEmailAboutSigningUpAsync(signedInUser.User.Id);
+            _logger.LogInformation("User with {UserName} signed up successfully", signedInUser.UserName);
+            await _mailService.SendEmailAboutSigningUpAsync(signedInUser.Id);
 
-            return Ok(signedInUser);
+            return NoContent();
         }
     }
 }

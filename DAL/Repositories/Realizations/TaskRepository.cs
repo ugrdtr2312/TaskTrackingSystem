@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using DAL.Entities;
 using DAL.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Task = DAL.Entities.Task;
 
 namespace DAL.Repositories.Realizations
 {

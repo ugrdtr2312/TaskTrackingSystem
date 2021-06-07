@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using API.Helpers;
 using BLL.DTOs.Project;
 using BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -176,23 +175,51 @@ namespace API.Controllers
         /// <response code="204">Returns nothing, user was successfully added to project</response>
         /// <response code="400">Returns message if something had gone wrong</response>
 
-        //POST api/projects/user-to-project
+        //POST api/projects/add-user-to-project
         [Authorize(Roles = RoleTypes.Manager)]
-        [HttpPost("user-to-project")]
+        [HttpPost("add-user-to-project")]
         [ProducesResponseType(204)]
-        public async Task<IActionResult> AddUserToProject(AddUserToProjectDto addUserToProjectDto)
+        public async Task<IActionResult> AddUserToProject(UserToProjectDto userToProjectDto)
         {
             var userId = Convert.ToInt32(User.FindFirstValue("UserId"));
             _logger.LogInformation(
                 "Manager with Id {UserId} wants to add user with Id {Id} to project with Id {ProjectId}",
-                userId, addUserToProjectDto.UserId, addUserToProjectDto.ProjectId);
+                userId, userToProjectDto.UserId, userToProjectDto.ProjectId);
 
-            await _projectService.AddUserToProject(addUserToProjectDto, userId);
+            await _projectService.AddUserToProjectAsync(userToProjectDto, userId);
             _logger.LogInformation(
                 "Manager with Id {UserId} added user with Id {Id} to project with Id {ProjectId} successfully",
-                userId, addUserToProjectDto.UserId, addUserToProjectDto.ProjectId);
+                userId, userToProjectDto.UserId, userToProjectDto.ProjectId);
 
-            await _mailService.SendEmailAboutAddingToProjectAsync(addUserToProjectDto);
+            await _mailService.SendEmailAboutAddingToProjectAsync(userToProjectDto);
+            
+            return NoContent();
+        }
+        
+        
+        /// <summary>
+        /// This method remove user from project and sends email to this person
+        /// </summary>
+        /// <response code="204">Returns nothing, user was successfully removed from project</response>
+        /// <response code="400">Returns message if something had gone wrong</response>
+
+        //POST api/projects/remove-user-from-project
+        [Authorize(Roles = RoleTypes.Manager)]
+        [HttpPost("remove-user-from-project")]
+        [ProducesResponseType(204)]
+        public async Task<IActionResult> RemoveUserToProject(UserToProjectDto userToProjectDto)
+        {
+            var userId = Convert.ToInt32(User.FindFirstValue("UserId"));
+            _logger.LogInformation(
+                "Manager with Id {UserId} wants to remove user with Id {Id} from project with Id {ProjectId}",
+                userId, userToProjectDto.UserId, userToProjectDto.ProjectId);
+
+            await _projectService.RemoveUserFromProjectAsync(userToProjectDto, userId);
+            _logger.LogInformation(
+                "Manager with Id {UserId} removed user with Id {Id} from project with Id {ProjectId} successfully",
+                userId, userToProjectDto.UserId, userToProjectDto.ProjectId);
+
+            await _mailService.SendEmailRemovingFromProjectAsync(userToProjectDto);
             
             return NoContent();
         }

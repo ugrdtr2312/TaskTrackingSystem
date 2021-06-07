@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -9,6 +10,7 @@ using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Task = System.Threading.Tasks.Task;
+using TaskStatus = Shared.Enums.TaskStatus;
 
 namespace BLL.Services.Realizations
 {
@@ -37,7 +39,7 @@ namespace BLL.Services.Realizations
         /// <summary>
         /// Gives an info about projects of current user
         /// </summary>
-        /// <param name="userId">Id of current user</param>
+        /// <param name="userId">User id of person who wants to do this action</param>
         /// <returns>List of projects</returns>
         /// <exception cref="InvalidDataException">Throws when user id is invalid</exception>
         public async Task<IEnumerable<ProjectDto>> GetAllProjectsByUserIdAsync(int userId)
@@ -74,7 +76,7 @@ namespace BLL.Services.Realizations
         /// Adds new project
         /// </summary>
         /// <param name="projectDto">Project</param>
-        /// <param name="userId">User id</param>
+        /// <param name="userId">User id of person who wants to do this action</param>
         /// <exception cref="DbQueryResultNullException">Throws when project wasn't saved</exception>
         /// <exception cref="InvalidDataException">Throws when user id is invalid</exception>
         public async Task<ProjectDto> CreateAsync(ProjectCreateDto projectDto, int userId)
@@ -106,7 +108,7 @@ namespace BLL.Services.Realizations
         /// Changes project info
         /// </summary>
         /// <param name="projectDto">Project</param>
-        /// <param name="userId">User id</param>
+        /// <param name="userId">User id of person who wants to do this action</param>
         /// <exception cref="DbQueryResultNullException">Throws when project doesn't exist or changes wasn't produced</exception>
         /// <exception cref="IdentityException">Throws when user is not a manager of this project</exception>
         /// <exception cref="InvalidDataException">Throws when user id is invalid</exception>
@@ -134,7 +136,7 @@ namespace BLL.Services.Realizations
         /// Removes project
         /// </summary>
         /// <param name="projectId">Project Id</param>
-        /// <param name="userId">User id</param>
+        /// <param name="userId">User id of person who wants to do this action</param>
         /// <exception cref="DbQueryResultNullException">Throws when project doesn't exist or removal wasn't produced</exception>
         /// <exception cref="IdentityException">Throws when user is not a manager of this project</exception>
         /// <exception cref="InvalidDataException">Throws when user id is invalid</exception>
@@ -160,23 +162,22 @@ namespace BLL.Services.Realizations
         /// <summary>
         /// Adds new user to project
         /// </summary>
-        /// <param name="userId">User id</param>
-        /// <param name="addUserToProjectDto">User id and project id info</param>
+        /// <param name="userId">User id of person who wants to do this action</param>
+        /// <param name="userToProjectDto">User id and project id info</param>
         /// <exception cref="DbQueryResultNullException">Throws when project doesn't exist or changes wasn't produced</exception>
         /// <exception cref="IdentityException">Throws when user is not a manager of this project</exception>
         /// <exception cref="InvalidDataException">Throws when user id is invalid</exception>
-        public async Task AddUserToProject(AddUserToProjectDto addUserToProjectDto, int userId)
+        public async Task AddUserToProjectAsync(UserToProjectDto userToProjectDto, int userId)
         {
             if (userId == 0)
                 throw new InvalidDataException("Value of UserId in token can't be null or empty");
-            
-            // TODO: ASTRACKING
-            var project = await _uow.Projects.GetByIdAsyncAsTracking(addUserToProjectDto.ProjectId);
+          
+            var project = await _uow.Projects.GetByIdAsyncAsTracking(userToProjectDto.ProjectId);
             
             if (project == null)
                 throw new DbQueryResultNullException("This project doesn't exist");
             
-            var user = await _uow.UserManager.Users.FirstOrDefaultAsync(u => u.Id == addUserToProjectDto.UserId);
+            var user = await _uow.UserManager.Users.FirstOrDefaultAsync(u => u.Id == userToProjectDto.UserId);
             
             if (user == null) 
                 throw new DbQueryResultNullException("This user doesn't exist");
@@ -184,7 +185,7 @@ namespace BLL.Services.Realizations
             if (project.Users.All(u => u.Id != userId))
                 throw new IdentityException("Only manager of this project can add user to it");
             
-            if (project.Users.Any(u => u.Id == addUserToProjectDto.UserId))
+            if (project.Users.Any(u => u.Id == userToProjectDto.UserId))
                 throw new IdentityException("This user is already in this project");
 
             project.Users.Add(user);
@@ -194,5 +195,56 @@ namespace BLL.Services.Realizations
                 throw new DbQueryResultNullException("Changes to projects weren't produced");
         }
 
+        /// <summary>
+        /// Removes user from project, all not finished tasks become unsigned
+        /// </summary>
+        /// <param name="userId">User id of person who wants to do this action</param>
+        /// <param name="userToProjectDto">User id and project id info</param>
+        /// <exception cref="DbQueryResultNullException">Throws when project doesn't exist or changes wasn't produced</exception>
+        /// <exception cref="IdentityException">Throws when user is not a manager of this project</exception>
+        /// <exception cref="InvalidDataException">Throws when user id is invalid</exception>
+        public async Task RemoveUserFromProjectAsync(UserToProjectDto userToProjectDto, int userId)
+        {
+            if (userId == 0)
+                throw new InvalidDataException("Value of UserId in token can't be null or empty");
+          
+            var project = await _uow.Projects.GetByIdAsyncAsTracking(userToProjectDto.ProjectId);
+            
+            if (project == null)
+                throw new DbQueryResultNullException("This project doesn't exist");
+            
+            var user = await _uow.UserManager.Users.FirstOrDefaultAsync(u => u.Id == userToProjectDto.UserId);
+            
+            if (user == null) 
+                throw new DbQueryResultNullException("This user doesn't exist");
+           
+            if (project.Users.All(u => u.Id != userId))
+                throw new IdentityException("Only manager of this project can add user to it");
+            
+            if (project.Users.All(u => u.Id != userToProjectDto.UserId))
+                throw new IdentityException("This user isn't in this project");
+
+            var tasksToChange = await _uow.Tasks
+                .GetManyAsTrackingAsync(t => t.UserId == userToProjectDto.UserId
+                                             && t.ProjectId == userToProjectDto.ProjectId &&
+                                             t.TaskStatus != TaskStatus.Completed);
+            
+            foreach (var task in tasksToChange)
+            {
+                if (task.TaskStatus == TaskStatus.InProgress) task.TaskStatus = TaskStatus.Open;
+                task.LastUpdate = DateTime.Now;
+                task.UserId = null;
+                _uow.Tasks.Update(task);
+            }
+            
+            if (!await _uow.SaveChangesAsync())
+                throw new DbQueryResultNullException("Tasks weren't updated");
+
+            project.Users = project.Users.Where(u => u.Id != userToProjectDto.UserId).ToList();
+            _uow.Projects.Update(project);
+            
+            if (!await _uow.SaveChangesAsync())
+                throw new DbQueryResultNullException("User wasn't removed from project");
+        }
     }
 }

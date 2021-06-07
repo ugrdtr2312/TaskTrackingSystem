@@ -13,17 +13,15 @@ namespace DAL.UoWs
         private readonly DbContext _context;
 
         public EfUoW(DbContext context, IProjectRepository projectRepository, ITaskRepository taskRepository, 
-            UserManager<User> userManager, RoleManager<UserRole> roleManager)
+            UserManager<User> userManager)
         {
             _context = context;
             UserManager = userManager;
-            RoleManager = roleManager;
             Tasks = taskRepository;
             Projects = projectRepository;
         }
         
         public UserManager<User> UserManager { get; }
-        public RoleManager<UserRole> RoleManager { get; }
         public ITaskRepository Tasks { get; }
         public IProjectRepository Projects { get; }
         

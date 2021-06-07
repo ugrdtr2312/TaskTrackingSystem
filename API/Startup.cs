@@ -33,11 +33,7 @@ namespace API
             
             services.SwaggerConfigure();
             
-            /*// In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "../TaskTrackingApp/dist";
-            });*/
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,34 +41,26 @@ namespace API
         {
             app.Migrate();
 
+            // app.UseDefaultFiles();
+            // app.UseStaticFiles();
+
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200"));
+
             app.UseAuthentication();
-           
-            app.UseSwagger(c => {c.SerializeAsV2 = true;});
-            
+
+            app.UseSwagger(c => { c.SerializeAsV2 = true; });
+
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "TaskTrackingAPI");
                 c.RoutePrefix = string.Empty;
             });
-            
+
             app.UseRouting();
-            
+
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapDefaultControllerRoute();
-            });
-            
-            /*app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "../TaskTrackingApp";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
-            });*/
+            app.UseEndpoints(endpoints => { endpoints.MapDefaultControllerRoute(); });
         }
     }
 }

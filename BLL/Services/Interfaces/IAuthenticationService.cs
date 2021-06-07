@@ -5,7 +5,7 @@ namespace BLL.Services.Interfaces
 {
     public interface IAuthenticationService
     {
-        Task<SignedInUserDto> SignInAsync(LoginDto loginDto);
-        Task<SignedInUserDto> SignUpAsync(RegistrationDto registrationDto);
+        Task<string> SignInAsync(LoginDto loginDto);
+        Task<UserDto> SignUpAsync(RegistrationDto registrationDto);
     }
 }

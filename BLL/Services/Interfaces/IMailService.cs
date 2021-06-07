@@ -7,7 +7,8 @@ namespace BLL.Services.Interfaces
 {
     public interface IMailService
     {
-        Task SendEmailAboutAddingToProjectAsync(AddUserToProjectDto addUserToProjectDto);
+        Task SendEmailAboutAddingToProjectAsync(UserToProjectDto userToProjectDto);
+        Task SendEmailRemovingFromProjectAsync(UserToProjectDto userToProjectDto);
         Task SendEmailAboutSigningInAsync(LoginDto loginDto);
         Task SendEmailAboutSigningUpAsync(int userId);
     }

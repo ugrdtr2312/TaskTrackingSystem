@@ -9,7 +9,6 @@ namespace DAL.Interfaces
     public interface IUoW : IDisposable
     {
         UserManager<User> UserManager { get; }
-        RoleManager<UserRole> RoleManager { get; }
         IProjectRepository Projects { get; }
         ITaskRepository Tasks { get; }
         Task<bool> SaveChangesAsync();

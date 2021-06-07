@@ -31,18 +31,13 @@ namespace BLL.Services.Realizations
             _tokensSettings = tokensSettings.Value;
         }
         
-        /*public async Task<bool> IsUserInRoleAsync(int id, string role)
-        {
-            var user = await _userManager.Users.
-                FirstOrDefaultAsync(u => u.Id == id);
-
-            if (user == null)
-                throw new DbQueryResultNullException("Db query result to users is null");
-
-            return await _userManager.IsInRoleAsync(user, role); 
-        }*/
-        
-        public async Task<SignedInUserDto> SignInAsync(LoginDto loginDto)
+        /// <summary>
+        /// Generate jwt-token for user if login data is correct
+        /// </summary>
+        /// <param name="loginDto">User login data</param>
+        /// <returns>Jwt-token</returns>
+        /// <exception cref="InvalidDataException">Throws if user login data is invalid</exception>
+        public async Task<string> SignInAsync(LoginDto loginDto)
         {
             var user = await _uow.UserManager.FindByNameAsync(loginDto.UserName);
             
@@ -50,31 +45,36 @@ namespace BLL.Services.Realizations
                 throw new InvalidDataException("User with this login doesn't exist");
             if ( !await _uow.UserManager.CheckPasswordAsync(user, loginDto.Password))
                 throw new InvalidDataException("This password is incorrect");
-            
-            var token = await GenerateJwtToken(user);
-            var userDto = _mapper.Map<UserDto>(user);
 
-            return new SignedInUserDto(userDto, token);
+            return await GenerateJwtToken(user);
         }
 
-        public async Task<SignedInUserDto> SignUpAsync(RegistrationDto registrationDto)
+        /// <summary>
+        /// Add user to database
+        /// </summary>
+        /// <param name="registrationDto">User registration data</param>
+        /// <returns>User info</returns>
+        /// <exception cref="InvalidDataException">Throws when user registration data is invalid</exception>
+        public async Task<UserDto> SignUpAsync(RegistrationDto registrationDto)
         {
             var user = _mapper.Map<User>(registrationDto);
 
             var result = await _uow.UserManager.CreateAsync(user, registrationDto.Password);
             
             if (!result.Succeeded)
-                throw new InvalidDataException("Failed to create user");
+                throw new InvalidDataException(result.Errors?.FirstOrDefault()?.Description);
 
             await _uow.UserManager.AddToRoleAsync(user, RoleTypes.User);
             await _uow.SaveChangesAsync();
-
-            var token = await GenerateJwtToken(user);
-            var userDto = _mapper.Map<UserDto>(user);
-
-            return new SignedInUserDto(userDto, token);
+            
+            return _mapper.Map<UserDto>(user);
         }
         
+        /// <summary>
+        /// Generate jwt-token method
+        /// </summary>
+        /// <param name="user">User data</param>
+        /// <returns>Jwt-token</returns>
         private async Task<string> GenerateJwtToken(User user)
         {
             var utcNow = DateTime.UtcNow;
@@ -84,8 +84,8 @@ namespace BLL.Services.Realizations
             var claims = new []
             {
                 new Claim("UserId", user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(ClaimTypes.Role,roles.FirstOrDefault() ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, utcNow.ToString(CultureInfo.InvariantCulture))
