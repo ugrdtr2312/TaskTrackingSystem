@@ -12,13 +12,7 @@
         </a>
       </div>
       <div class="navbar-nav" *ngIf="isManager">
-        <a class="nav-item nav-link" routerLinkActive="active" href="/products">Products</a>
-        <a class="nav-item nav-link" routerLinkActive="active" href="/suppliers">Suppliers</a>
-        <a class="nav-item nav-link" routerLinkActive="active" href="/categories">Categories</a>
-        <a class="nav-item nav-link" routerLinkActive="active" href="/brands">Brands</a>
-        <a class="nav-item nav-link" routerLinkActive="active" href="/adminpanel">
-          Admin panel
-        </a>
+        <a class="nav-item nav-link" [routerLink]="['/home']" [routerLinkActive]="['active']">Projects</a>
       </div>
       <div class="navbar-nav" *ngIf="isUser">
         <a class="nav-item nav-link" routerLinkActive="active" href="/products">Products</a>

@@ -237,9 +237,6 @@ namespace BLL.Services.Realizations
                 _uow.Tasks.Update(task);
             }
             
-            if (!await _uow.SaveChangesAsync())
-                throw new DbQueryResultNullException("Tasks weren't updated");
-
             project.Users = project.Users.Where(u => u.Id != userToProjectDto.UserId).ToList();
             _uow.Projects.Update(project);
             

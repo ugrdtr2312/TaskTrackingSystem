@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { HttpClient } from "@angular/common/http";
+import { UserInProject } from './user-in-project.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +10,7 @@ import { HttpClient } from "@angular/common/http";
 export class UserService {
 
   constructor(private fb: FormBuilder, private http: HttpClient) { }
+  listOfUsersInProject: UserInProject[];
 
   formModel = this.fb.group({
     UserName: ['', Validators.required],
@@ -45,6 +48,12 @@ export class UserService {
   login(formData: any) {
     return this.http.post('/api/Authentication/login', formData);
   }
+
+  usersInProject(projectId: number){
+    return this.http.get(`api/Users/users-for-project/${projectId}`).toPromise()
+    .then(res => this.listOfUsersInProject = res as UserInProject[]);
+  }
+
 
   roleMatch(allowedRoles: any[]): boolean {
     var isMatch = false;

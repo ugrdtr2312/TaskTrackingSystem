@@ -27,9 +27,9 @@ export class ProjectInfoComponent implements OnInit {
   inserRecord(form: NgForm){
     this.service.postProject().subscribe(
       res => {
+        this.toastr.info('Submitted succesfully', `Project '${form.value.name}' added`);
         this.resetForm(form);
         this.service.refreshList();
-        this.toastr.success('Submitted succesfully', "Project added")
       },
       err => {
         this.toastr.error(err.error, "Project wasn't added")
@@ -40,12 +40,12 @@ export class ProjectInfoComponent implements OnInit {
   updateRecord(form:NgForm){
     this.service.putProject().subscribe(
       res => {
+        this.toastr.info('Submitted succesfully', `Project '${form.value.name}' updated`);
         this.resetForm(form);
         this.service.refreshList();
-        this.toastr.info('Updated succesfully', "Project updated")
       },
       err => {
-        console.log(err);
+        this.toastr.error(err.error, "Project wasn't updated")
       }
     );
   }

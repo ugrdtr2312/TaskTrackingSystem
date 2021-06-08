@@ -20,6 +20,7 @@ import { ProjectInfoComponent } from './components/project/project-info/project-
 import { ProjectComponent } from './components/project/project.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { SortDirective } from './helpers/util/sort.directive';
+import { ProjectUsersComponent } from './components/project/project-users/project-users.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { SortDirective } from './helpers/util/sort.directive';
     NavComponent,
     ProjectInfoComponent,
     ProjectComponent,
-    SortDirective
+    SortDirective,
+    ProjectUsersComponent
   ],
   imports: [
     BrowserModule,

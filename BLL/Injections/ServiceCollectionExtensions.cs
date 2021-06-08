@@ -28,6 +28,7 @@ namespace BLL.Injections
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IUserService, UserService>();
         }
     }
 }

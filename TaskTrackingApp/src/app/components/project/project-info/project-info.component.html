@@ -1,4 +1,5 @@
 <form novalidate autocomplete="off" #form="ngForm" (submit)="onSubmit(form)">
+    <i class="fas fa-sync-alt fa-lg text-dark float-right" (click)="resetForm(form)"></i>
     <input type="hidden" name="id" [value]="service.formData.id" />
     <div class="form-group">
         <label>PROJECT NAME</label>
