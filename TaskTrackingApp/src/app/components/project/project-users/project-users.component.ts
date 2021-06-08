@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { ProjectService } from 'src/app/shared/project/project.service';
 import { UserToProject } from 'src/app/shared/user/user-to-project.model';
@@ -15,7 +14,6 @@ import { UserService } from 'src/app/shared/user/user.service';
 })
 export class ProjectUsersComponent implements OnInit {
   id: number;
-  private subscription: Subscription;
   serach:string;
   
   constructor(private route: ActivatedRoute, private toastr:ToastrService,

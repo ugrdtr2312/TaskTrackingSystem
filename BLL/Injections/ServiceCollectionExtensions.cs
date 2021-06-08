@@ -26,6 +26,7 @@ namespace BLL.Injections
             services.Configure<TokensSettings>(configuration.GetSection("TokensSettings"));
             
             services.AddScoped<IMailService, MailService>();
+            services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();

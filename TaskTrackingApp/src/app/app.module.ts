@@ -21,6 +21,10 @@ import { ProjectComponent } from './components/project/project.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { SortDirective } from './helpers/util/sort.directive';
 import { ProjectUsersComponent } from './components/project/project-users/project-users.component';
+import { ProjectTasksComponent } from './components/project/project-tasks/project-tasks.component';
+import { ProfileComponent } from './components/user/profile/profile.component';
+import { StatisticComponent } from './components/user/statistic/statistic.component';
+import { TaskInfoComponent } from './components/project/project-tasks/task-info/task-info.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +39,11 @@ import { ProjectUsersComponent } from './components/project/project-users/projec
     ProjectInfoComponent,
     ProjectComponent,
     SortDirective,
-    ProjectUsersComponent
+    ProjectUsersComponent,
+    ProjectTasksComponent,
+    ProfileComponent,
+    StatisticComponent,
+    TaskInfoComponent
   ],
   imports: [
     BrowserModule,

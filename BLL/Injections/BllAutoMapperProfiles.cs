@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL.DTOs.Project;
+using BLL.DTOs.Task;
 using BLL.DTOs.User;
 using DAL.Entities;
 
@@ -11,7 +12,16 @@ namespace BLL.Injections
         {
             CreateMap<Project, ProjectDto>().ReverseMap();
             CreateMap<Project, ProjectCreateDto>().ReverseMap();
-            
+            CreateMap<Task, TaskDto>()
+                .ForMember(dest => dest.TaskStatus, 
+                    opt => opt.MapFrom(source => source.TaskStatus.ToString()))
+                .ForMember(dest => dest.TaskStatusId, 
+                    opt => opt.MapFrom(source => source.TaskStatus))
+                .ForMember(dest => dest.TaskPriority, 
+                    opt => opt.MapFrom(source => source.TaskPriority.ToString()))
+                .ForMember(dest => dest.TaskPriorityId, 
+                    opt => opt.MapFrom(source => source.TaskPriority))
+                .ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, RegistrationDto>().ReverseMap();
         }

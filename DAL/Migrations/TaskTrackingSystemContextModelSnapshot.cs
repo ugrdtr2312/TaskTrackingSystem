@@ -82,7 +82,9 @@ namespace DAL.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime?>("LastUpdate")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -114,7 +116,7 @@ namespace DAL.Migrations
                         {
                             Id = 1,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 9, 18, 51, 59, 921, DateTimeKind.Local).AddTicks(9176),
+                            Deadline = new DateTime(2021, 6, 11, 19, 53, 28, 902, DateTimeKind.Local).AddTicks(8658),
                             Description = "Task1 description",
                             Name = "Task1",
                             ProjectId = 1,
@@ -126,7 +128,7 @@ namespace DAL.Migrations
                         {
                             Id = 2,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 10, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2794),
+                            Deadline = new DateTime(2021, 6, 12, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1753),
                             Description = "Task2 description",
                             Name = "Task2",
                             ProjectId = 1,
@@ -138,7 +140,7 @@ namespace DAL.Migrations
                         {
                             Id = 3,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 7, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2823),
+                            Deadline = new DateTime(2021, 6, 9, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1864),
                             Description = "Task3 description",
                             Name = "Task3",
                             ProjectId = 1,
@@ -150,7 +152,7 @@ namespace DAL.Migrations
                         {
                             Id = 4,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 12, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2829),
+                            Deadline = new DateTime(2021, 6, 14, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1883),
                             Description = "Task4 description",
                             Name = "Task4",
                             ProjectId = 1,
@@ -162,7 +164,7 @@ namespace DAL.Migrations
                         {
                             Id = 5,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 8, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2832),
+                            Deadline = new DateTime(2021, 6, 10, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1894),
                             Description = "Task5 description",
                             Name = "Task5",
                             ProjectId = 1,
@@ -174,7 +176,7 @@ namespace DAL.Migrations
                         {
                             Id = 6,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 10, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2834),
+                            Deadline = new DateTime(2021, 6, 12, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1905),
                             Description = "Task6 description",
                             Name = "Task6",
                             ProjectId = 1,
@@ -186,7 +188,7 @@ namespace DAL.Migrations
                         {
                             Id = 7,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 9, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2838),
+                            Deadline = new DateTime(2021, 6, 11, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1917),
                             Description = "Task7 description",
                             Name = "Task7",
                             ProjectId = 1,
@@ -198,7 +200,7 @@ namespace DAL.Migrations
                         {
                             Id = 8,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 11, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2841),
+                            Deadline = new DateTime(2021, 6, 13, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1929),
                             Description = "Task8 description",
                             Name = "Task8",
                             ProjectId = 1,
@@ -210,7 +212,7 @@ namespace DAL.Migrations
                         {
                             Id = 9,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 7, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2843),
+                            Deadline = new DateTime(2021, 6, 9, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1940),
                             Description = "Task9 description",
                             Name = "Task9",
                             ProjectId = 1,
@@ -222,7 +224,7 @@ namespace DAL.Migrations
                         {
                             Id = 10,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 9, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2846),
+                            Deadline = new DateTime(2021, 6, 11, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1951),
                             Description = "Task10 description",
                             Name = "Task10",
                             ProjectId = 1,
@@ -234,7 +236,7 @@ namespace DAL.Migrations
                         {
                             Id = 11,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 12, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2849),
+                            Deadline = new DateTime(2021, 6, 14, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1964),
                             Description = "Task11 description",
                             Name = "Task11",
                             ProjectId = 1,
@@ -246,7 +248,7 @@ namespace DAL.Migrations
                         {
                             Id = 12,
                             CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Deadline = new DateTime(2021, 6, 10, 18, 51, 59, 924, DateTimeKind.Local).AddTicks(2851),
+                            Deadline = new DateTime(2021, 6, 12, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1975),
                             Description = "Task12 description",
                             Name = "Task12",
                             ProjectId = 1,
@@ -337,16 +339,16 @@ namespace DAL.Migrations
                         {
                             Id = 1,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ef57e080-2308-49e9-812c-e18fff3d7d3b",
+                            ConcurrencyStamp = "28db485a-58c5-4d17-922f-565f62d7cd89",
                             Email = "vladimir231200@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Vladimir",
                             LockoutEnabled = false,
                             NormalizedEmail = "VLADIMIR231200@GMAIL.COM",
                             NormalizedUserName = "UGRDTR",
-                            PasswordHash = "AQAAAAEAACcQAAAAEK9bSPDGdmY1L/+ZVXrVyn0+lCBUZFUxdzn6HhgW4U/SFBBe8KlgHXmNFdBiALStNQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEK8MSrQ77pE79CDWexx5mIFLIH9+TWnBPsiBZoQwA2R4CIjtIhCRhvUdSYSkiXm5lw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9820291d-ab5c-42e5-8e8b-afd2f8293e1a",
+                            SecurityStamp = "93819f85-ad68-45a9-b89a-55a0218f911c",
                             Surname = "Shengeliya",
                             TwoFactorEnabled = false,
                             UserName = "ugrdtr"
@@ -355,16 +357,16 @@ namespace DAL.Migrations
                         {
                             Id = 2,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e8ad7d13-cd80-4028-befa-2652c93c961f",
+                            ConcurrencyStamp = "103b4eef-f765-49e4-b279-9c97d9a2c57f",
                             Email = "ns18091@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Nikita",
                             LockoutEnabled = false,
                             NormalizedEmail = "NS18091@GMAIL.COM",
                             NormalizedUserName = "MXXNR1SE",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHpyaRcV/QDVIMP62+rE+SFjcsx1Skk37Sl/hI4wYgOCfeMWeUjzVoQ0qJLClUXRwQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECahqnejvCvM0UW+9AzRoHpukFIo13txuwWv5LE9J4yg55ZPgSHYjfA+Du+yl3GGTQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2b405fd5-a5b7-4494-9747-226802529c6f",
+                            SecurityStamp = "c4ba0538-e977-45fe-ad06-8c428c8aca5d",
                             Surname = "Sidorov",
                             TwoFactorEnabled = false,
                             UserName = "mxxnr1se"
@@ -373,16 +375,16 @@ namespace DAL.Migrations
                         {
                             Id = 3,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "69cc48b7-5ac6-4d3a-b81f-bd86d354abc7",
+                            ConcurrencyStamp = "342c49e2-8704-42bb-afe7-e8ddbde90707",
                             Email = "kochka4real@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Danila",
                             LockoutEnabled = false,
                             NormalizedEmail = "KOCHKA4REAL@GMAIL.COM",
                             NormalizedUserName = "AOLAN13",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEO5WxgZBy/F9ITNjfw3yvX1l6EtOBvrTwY9B9sTjbGNh5FtNQZlv2GvIZG71ySk0A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEG5Se7D+w9cjKKzQLpGpunUNMaIjTz7ft+36m/p8HrV1SSzEc1sXdVkLxC79BDPxFg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b12cada3-2555-4d65-bd07-50e946453dc8",
+                            SecurityStamp = "ee7916a3-67e6-402d-a5ca-bfbd9b0106e4",
                             Surname = "Crazy",
                             TwoFactorEnabled = false,
                             UserName = "Aolan13"
@@ -391,16 +393,16 @@ namespace DAL.Migrations
                         {
                             Id = 4,
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "99d6d5ae-5f61-49ed-a5f6-ef8e2020aa07",
+                            ConcurrencyStamp = "985c9269-7f80-4ec7-b11b-82d313c0dcff",
                             Email = "janglaide@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Alison",
                             LockoutEnabled = false,
                             NormalizedEmail = "JANGLAIDE@GMAIL.COM",
                             NormalizedUserName = "JANGLAIDE",
-                            PasswordHash = "AQAAAAEAACcQAAAAEA/UeK7N10FsE9jxcrFb7nqYNjDPex+L6zy/aL+ULmrw/zMk5gwPa86bWRNjddQ7ow==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJA3Zp/vA1UfXKBc9JwlYDvgkdYVUjFLD8fKwBwWRub9Lh57l0S483cPd3xQC5MXKg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0c1f260e-f306-48b8-bc28-5751b89524f5",
+                            SecurityStamp = "6c99d826-028a-475e-9d7a-813cca374e94",
                             Surname = "Proshchenko",
                             TwoFactorEnabled = false,
                             UserName = "janglaide"
@@ -439,21 +441,21 @@ namespace DAL.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "f2e86f69-1a84-40bd-baa7-0ae9ed1ce2de",
+                            ConcurrencyStamp = "b8c86c69-5d9d-424b-9850-afdc81c30c38",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "8d141fa6-5309-4043-9368-1e40354bd84c",
+                            ConcurrencyStamp = "32d350dd-0dc2-4b6d-95f3-8ad966df2236",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "ab64df49-c7dc-41be-a25c-aa0d0084244e",
+                            ConcurrencyStamp = "45f6eca1-06f3-491f-a4f9-bbb7da6dfa3e",
                             Name = "User",
                             NormalizedName = "USER"
                         });

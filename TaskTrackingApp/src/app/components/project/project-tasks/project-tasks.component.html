@@ -1,0 +1,25 @@
+<div class="row pt-4">
+    <input type="search" class="form-control form-control-lg" placeholder="Search..."  [(ngModel)]=serach><br>
+    <table class="table mt-3">
+        <thead class="thead-light"> 
+            <tr>
+                <th class="col-sm-5" scope="col" [appSort]="service.list" data-order="desc" data-name="name">Task name</th>
+                <th class="col-sm-2 text-center" scope="col" [appSort]="service.list" data-order="desc" data-name="deadline">Deadline</th>
+                <th class="col-sm-2 text-center" scope="col" [appSort]="service.list" data-order="desc" data-name="taskStatus">Task status</th>
+                <th class="col-sm-2 text-center" scope="col" [appSort]="service.list" data-order="desc" data-name="taskPriority">Task priority</th>
+                <th class="col-sm-1" scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let task of service.list | filter: serach">
+                <td>{{task.name}}</td>
+                <td class="text-center">{{task.deadline}}</td>
+                <td class="text-center">{{task.taskStatus}}</td>
+                <td class="text-center">{{task.taskPriority}}</td>
+                <td>
+                    <i class="far fa-trash-alt fa-lg text-danger" (click)="onDelete(task)"></i>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

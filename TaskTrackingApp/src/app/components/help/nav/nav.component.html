@@ -1,8 +1,8 @@
-{{ intializeData() }}
+{{aaaa()}}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="isLogged">
     <a class="navbar-brand">TaskTrackingApp</a>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav" *ngIf="isAdmin">
+      <div class="navbar-nav" *ngIf="role === 'Admin'">
         <a class="nav-item nav-link" routerLinkActive="active" href="/products">Products</a>
         <a class="nav-item nav-link" routerLinkActive="active" href="/suppliers">Suppliers</a>
         <a class="nav-item nav-link" routerLinkActive="active" href="/categories">Categories</a>
@@ -11,17 +11,14 @@
           Admin panel
         </a>
       </div>
-      <div class="navbar-nav" *ngIf="isManager">
+      <div class="navbar-nav" *ngIf="role === 'Manager'">
         <a class="nav-item nav-link" [routerLink]="['/home']" [routerLinkActive]="['active']">Projects</a>
+        <a class="nav-item nav-link" [routerLink]="['/profile']" [routerLinkActive]="['active']">Profile</a>
       </div>
-      <div class="navbar-nav" *ngIf="isUser">
-        <a class="nav-item nav-link" routerLinkActive="active" href="/products">Products</a>
-        <a class="nav-item nav-link" routerLinkActive="active" href="/suppliers">Suppliers</a>
-        <a class="nav-item nav-link" routerLinkActive="active" href="/categories">Categories</a>
-        <a class="nav-item nav-link" routerLinkActive="active" href="/brands">Brands</a>
-        <a class="nav-item nav-link" routerLinkActive="active" href="/adminpanel">
-          Admin panel
-        </a>
+      <div class="navbar-nav" *ngIf="role === 'User'">
+        <a class="nav-item nav-link" [routerLink]="['/home']" [routerLinkActive]="['active']">Projects</a>
+        <a class="nav-item nav-link" [routerLink]="['/profile']" [routerLinkActive]="['active']">Profile</a>
+        <a class="nav-item nav-link" [routerLink]="['/statistic']" [routerLinkActive]="['active']">Statistic</a>
       </div>
     </div>
     <button class="btn btn-danger my-2 my-sm-0" (click)="onLogout()">Logout</button>

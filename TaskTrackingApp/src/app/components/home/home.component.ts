@@ -8,14 +8,10 @@ import { UserService } from 'src/app/shared/user/user.service';
   styles: []
 })
 export class HomeComponent implements OnInit {
-
+  role: string| null
   constructor(private router: Router, private service: UserService) { }
 
   ngOnInit() {
-  }
-
-  onLogout() {
-    localStorage.removeItem('token');
-    this.router.navigate(['/user/login']);
+    this.role = localStorage.getItem("role")
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/shared/user/user.service';
 
@@ -10,28 +10,22 @@ import { UserService } from 'src/app/shared/user/user.service';
 
 export class NavComponent implements OnInit {
   isLogged : boolean | undefined
-  isAdmin: boolean | undefined
-  isManager: boolean | undefined
-  isUser: boolean | undefined
+  role: string | null;
 
   constructor(private router: Router, private service: UserService) {
   }
   
   ngOnInit() {
-  
   }
 
-  intializeData(){
+  aaaa(){
     this.isLogged = localStorage.getItem('token') !== null;
-    if (this.isLogged) {
-      this.isAdmin = this.service.roleMatch(['Admin']);
-      this.isManager = this.service.roleMatch(['Manager']);
-      this.isUser = this.service.roleMatch(['User']);
-    }
+    this.role = localStorage.getItem("role")
   }
 
   onLogout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('role');
     this.router.navigate(['/user/login']);
   }
 }

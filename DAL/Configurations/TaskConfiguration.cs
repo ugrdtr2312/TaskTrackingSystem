@@ -26,6 +26,10 @@ namespace DAL.Configurations
                 .HasDefaultValueSql("getdate()");
             
             builder
+                .Property(t => t.LastUpdate)
+                .HasDefaultValueSql("getdate()");
+            
+            builder
                 .Property(t => t.Deadline)
                 .IsRequired();
             

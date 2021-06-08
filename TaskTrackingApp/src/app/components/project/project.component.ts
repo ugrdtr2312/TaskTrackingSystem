@@ -11,6 +11,7 @@ import { ProjectService } from 'src/app/shared/project/project.service';
 })
 export class ProjectComponent implements OnInit {
   serach:string;
+  role: string | null;
   constructor(public service:ProjectService, private toastr:ToastrService) { }
 
   ngOnInit(): void {
@@ -32,9 +33,14 @@ export class ProjectComponent implements OnInit {
          this.service.formData = new Project();
          this.toastr.error("Deleted successfully", `Project '${project.name}' deleted`)
        },
-       err => {console.log(err)
-      }
+       err => {
+        this.toastr.error(err.error, "Project wasn't deleted")
+        }
       )
     }
+  }
+
+  aaaa(){
+    this.role = localStorage.getItem("role")
   }
 }

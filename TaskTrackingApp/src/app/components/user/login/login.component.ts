@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
     this.service.login(form.value).subscribe(
       (res: any) => {
         localStorage.setItem('token', res.token);
+        this.intializeData();
         this.router.navigateByUrl('/home');
       },
       err => {
@@ -34,5 +35,14 @@ export class LoginComponent implements OnInit {
         else
           console.log(err);
       });
+  }
+
+  intializeData(){
+  localStorage.getItem('token') !== null;
+    if (localStorage.getItem('token') !== null) {
+      if(this.service.roleMatch(['Admin'])) localStorage.setItem('role', 'Admin');
+      if(this.service.roleMatch(['Manager'])) localStorage.setItem('role', 'Manager');
+      if(this.service.roleMatch(['User'])) localStorage.setItem('role', 'User');
+    }
   }
 }

@@ -24,7 +24,11 @@ namespace API
                     options.Filters.Add(new ApiExceptionFilter());
                     options.Filters.Add(new ValidateModelAttribute());
                 })
-                .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
+                .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true)
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH':'mm";
+                });
 
             services.AddBusinessDependencies(Configuration);
             
