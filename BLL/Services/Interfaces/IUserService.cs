@@ -9,8 +9,9 @@ namespace BLL.Services.Interfaces
         Task<IEnumerable<UserOfProjectDto>> GetUsersOfProjectAsync(int projectId, int userId);
         Task<IEnumerable<UserIsInProjectDto>> GetUsersForProjectUsersAsync(int projectId, int userId);
         Task<IEnumerable<UserRoleDto>> GetUsersAndManagersAsync();
+        Task<UserDto> GetByIdAsync(int id);
         Task SetUserRoleAsync(UserRoleDto userRoleDto);
-        Task UpdateUserAsync(int id);
-        Task DeleteByIdAsync(int id);
+        Task UpdateAsync(UserDto user, int userId);
+        Task<UserDto> DeleteByIdAsync(int id);
     }
 }

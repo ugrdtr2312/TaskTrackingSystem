@@ -99,13 +99,38 @@ namespace BLL.Services.Realizations
             var user = await _uow.UserManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
             
             if (user == null)
-                throw new InvalidDataException("User with this login doesn't exist");
+                throw new DbQueryResultNullException("This user doesn't exist");
 
             await SendEmailAsync(new MailRequest()
             {
                 ToEmail = user.Email,
                 Subject = $"Hi, {user.FirstName}! Welcome in our system.",
                 Body = "We are happy that you are a part of us)"
+            });
+        }
+
+        public async Task SendEmailAboutUserRemovingAsync(UserDto userDto)
+        {
+            await SendEmailAsync(new MailRequest()
+            {
+                ToEmail = userDto.Email,
+                Subject = $"Hi, {userDto.FirstName}! You are not a member of our system anymore.",
+                Body = "You profile was removed by our admin!"
+            });
+        }
+
+        public async Task SendEmailAboutRoleChangingAsync(UserRoleDto userRoleDto)
+        {
+            var user = await _uow.UserManager.Users.FirstOrDefaultAsync(u => u.Id == userRoleDto.Id);
+            
+            if (user == null)
+                throw new DbQueryResultNullException("This user doesn't exist");
+
+            await SendEmailAsync(new MailRequest()
+            {
+                ToEmail = user.Email,
+                Subject = $"Hi, {user.FirstName}! Your role was changed.",
+                Body = $"Your role now is {userRoleDto.Role}"
             });
         }
     }

@@ -15,7 +15,7 @@ namespace API.Controllers
     /// Contains all http methods for working with tasks.
     /// </summary>
     /// <remarks>
-    /// This class can get, create, remove, edit tasks, return statistics about them.
+    /// This class can return, create, remove, edit tasks, return statistics about them.
     /// </remarks>
     /// <response code="400">Returns message if something had gone wrong</response>
     /// <response code="401">If token is invalid or it wasn't provided</response>

@@ -10,5 +10,7 @@ namespace BLL.Services.Interfaces
         Task SendEmailRemovingFromProjectAsync(UserToProjectDto userToProjectDto);
         Task SendEmailAboutSigningInAsync(LoginDto loginDto);
         Task SendEmailAboutSigningUpAsync(int userId);
+        Task SendEmailAboutUserRemovingAsync(UserDto userDto);
+        Task SendEmailAboutRoleChangingAsync(UserRoleDto userRoleDto);
     }
 }

@@ -11,15 +11,17 @@ using Shared.Roles;
 namespace API.Controllers
 {
     /// <summary>
-    /// <c>AuthenticationController</c> is a class.
-    /// Contains all http methods for working with authentication.
+    /// <c>UsersController</c> is a class.
+    /// Contains all http methods for working with users.
     /// </summary>
     /// <remarks>
-    /// This class avoid to logging in ang registration.
+    /// This class can get, create, remove, edit users.
     /// </remarks>
     /// <response code="400">Returns message if something had gone wrong</response>
+    /// <response code="401">If token is invalid or it wasn't provided</response>
+    /// <response code="403">If user doesn't have needed credentials</response>
     
-    // api/authentication
+    // api/users
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -37,7 +39,7 @@ namespace API.Controllers
 
         
         /// <summary>
-        /// This method to get all users to add and remove them from project later
+        /// This method is to get all users to add and remove them from project later
         /// </summary>
         /// <response code="200">Returns users</response>
         
@@ -89,6 +91,42 @@ namespace API.Controllers
         
         
         /// <summary>
+        /// This method returns user that has an inputted Id property
+        /// </summary>
+        /// <response code="200">Returns user that has an inputted Id property</response>
+
+        //GET api/users/{id}
+        [HttpGet("{id:int}", Name = "GetUserById")]
+        public async Task<IActionResult> GetUserById(int id)
+        {
+            var user = await _userService.GetByIdAsync(id);
+
+            return Ok(user);
+        }
+        
+        
+        /// <summary>
+        /// This method changes user
+        /// </summary>
+        /// <response code="204">Returns nothing, user was successfully changed</response>
+
+        //PUT api/users
+        [HttpPut]
+        [ProducesResponseType(204)]
+        public async Task<IActionResult> UpdateUser(UserDto userDto)
+        {
+            var userId = Convert.ToInt32(User.FindFirstValue("UserId"));
+            _logger.LogInformation("User with Id {UserId} wants to change its profile", userId);
+
+            await _userService.UpdateAsync(userDto, userId);
+
+            _logger.LogInformation("User with Id {UserId} changed its profile successfully", userId);
+
+            return NoContent();
+        }
+        
+        
+        /// <summary>
         /// This method is for setting role to users
         /// </summary>
         /// <response code="204">Returns nothing, successfully changed</response>
@@ -96,9 +134,18 @@ namespace API.Controllers
         // api/users/set-user-role
         [Authorize(Roles = RoleTypes.Admin)]
         [HttpPost("set-user-role")]
+        [ProducesResponseType(204)]
         public async Task<ActionResult> SetUserRole(UserRoleDto userRoleDto)
         {
+            var userId = Convert.ToInt32(User.FindFirstValue("UserId"));
+            _logger.LogInformation("Admin with Id {UserId} wants to change role of user with id {Id}", 
+                userId, userRoleDto.Id);
+            
             await _userService.SetUserRoleAsync(userRoleDto);
+            
+            _logger.LogInformation("Admin with Id {UserId} changed role of user with id {Id} to {Role}", 
+                userId, userRoleDto.Id, userRoleDto.Role);
+            await _mailService.SendEmailAboutRoleChangingAsync(userRoleDto);
 
             return NoContent();
         }
@@ -118,9 +165,11 @@ namespace API.Controllers
             var userId = Convert.ToInt32(User.FindFirstValue("UserId"));
             _logger.LogInformation("Admin with Id {UserId} wants to remove user with id {Id}", userId, id);
             
-            await _userService.DeleteByIdAsync(id);
+            var user = await _userService.DeleteByIdAsync(id);
+            
             _logger.LogInformation("Admin with Id {UserId} removed user with id {Id} successfully", userId, id);
-                
+            await _mailService.SendEmailAboutUserRemovingAsync(user);
+            
             return NoContent();
         }
     }

@@ -16,7 +16,7 @@ namespace API.Controllers
     /// Contains all http methods for working with projects.
     /// </summary>
     /// <remarks>
-    /// This class can get, create, remove, edit projects, add users to them, return statistics about tasks in project.
+    /// This class can return, create, remove, edit projects, add users to them, return statistics about tasks in project.
     /// </remarks>
     /// <response code="400">Returns message if something had gone wrong</response>
     /// <response code="401">If token is invalid or it wasn't provided</response>
