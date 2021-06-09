@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { TaskService } from 'src/app/shared/task/task.service';
 
 @Component({
   selector: 'app-task-info',
@@ -8,9 +11,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TaskInfoComponent implements OnInit {
 
-  constructor() { }
+  currentDate : Date
+  constructor(public service: TaskService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
+    this.currentDate = new Date();
+  }
+
+  onSubmit(form: NgForm){
+    console.log('aaa')
   }
 
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -62,7 +63,7 @@ namespace BLL.Services.Realizations
         /// <exception cref="DbQueryResultNullException">Throws when task doesn't exist or removal wasn't produced</exception>
         /// <exception cref="IdentityException">Throws when user is not a manager of this project</exception>
         /// <exception cref="InvalidDataException">Throws when user id is invalid</exception>
-        public async Task RemoveAsync(int taskId, int userId)
+        public async Task<int> RemoveAsync(int taskId, int userId)
         {
             if (userId == 0)
                 throw new InvalidDataException("Value of UserId in token can't be null or empty");
@@ -80,6 +81,8 @@ namespace BLL.Services.Realizations
             _uow.Tasks.Remove(task);
             if (!await _uow.SaveChangesAsync())
                 throw new DbQueryResultNullException("This task wasn't removed");
+
+            return Convert.ToInt32(task.UserId);
         }
 
 

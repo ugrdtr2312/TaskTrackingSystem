@@ -6,9 +6,9 @@ export class Task {
     lastUpdate: string = ''
     deadline: string = ''
     taskStatus: string = ''
-    taskStatusId: number = 0
+    taskStatusId: number = 1
     taskPriority: string = ''
-    taskPriorityId: number = 0
+    taskPriorityId: number = 1
     projectId: number = 0
     userId?: number = 0
 }

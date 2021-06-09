@@ -13,7 +13,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { UserService } from './shared/user/user.service';
 import { AuthInterceptor } from './helpers/auth/auth.interceptor';
-import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { ForbiddenComponent } from './components/help/forbidden/forbidden.component';
 import { NavComponent } from './components/help/nav/nav.component';
 import { ProjectInfoComponent } from './components/project/project-info/project-info.component';
@@ -25,6 +24,8 @@ import { ProjectTasksComponent } from './components/project/project-tasks/projec
 import { ProfileComponent } from './components/user/profile/profile.component';
 import { StatisticComponent } from './components/user/statistic/statistic.component';
 import { TaskInfoComponent } from './components/project/project-tasks/task-info/task-info.component';
+import { UserRoleComponent } from './components/user/admin-panel/user-role/user-role.component';
+import { AdminPanelComponent } from './components/user/admin-panel/admin-panel.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { TaskInfoComponent } from './components/project/project-tasks/task-info/
     ProjectTasksComponent,
     ProfileComponent,
     StatisticComponent,
-    TaskInfoComponent
+    TaskInfoComponent,
+    UserRoleComponent
   ],
   imports: [
     BrowserModule,

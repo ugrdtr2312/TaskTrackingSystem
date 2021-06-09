@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { HttpClient } from "@angular/common/http";
 import { UserInProject } from './user-in-project.model';
-import { Observable } from 'rxjs';
+import { UserRole } from './user-role.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +11,8 @@ export class UserService {
 
   constructor(private fb: FormBuilder, private http: HttpClient) { }
   listOfUsersInProject: UserInProject[];
+  listOfUsersAndManagers: UserRole[];
+  userRoleFormData: UserRole = new UserRole();
 
   formModel = this.fb.group({
     UserName: ['', Validators.required],
@@ -49,11 +51,23 @@ export class UserService {
     return this.http.post('/api/Authentication/login', formData);
   }
 
+  changeUserRole() {
+    return this.http.post('/api/Users/set-user-role', this.userRoleFormData);
+  }
+
   usersInProject(projectId: number){
     return this.http.get(`api/Users/users-for-project/${projectId}`).toPromise()
     .then(res => this.listOfUsersInProject = res as UserInProject[]);
   }
 
+  usersAndManagers(){
+    return this.http.get('api/Users/users-and-managers').toPromise()
+    .then(res => this.listOfUsersAndManagers = res as UserRole[]);
+  }
+
+  removeUser(userId: number) {
+    return this.http.delete(`/api/Users/${userId}`);
+  }
 
   roleMatch(allowedRoles: any[]): boolean {
     var isMatch = false;

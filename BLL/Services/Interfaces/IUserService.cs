@@ -6,9 +6,10 @@ namespace BLL.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserDto>> GetUsersAsync();
+        Task<IEnumerable<UserOfProjectDto>> GetUsersOfProjectAsync(int projectId, int userId);
         Task<IEnumerable<UserIsInProjectDto>> GetUsersForProjectUsersAsync(int projectId, int userId);
-        Task ChangeUserRoleAsync(string id);
+        Task<IEnumerable<UserRoleDto>> GetUsersAndManagersAsync();
+        Task SetUserRoleAsync(UserRoleDto userRoleDto);
         Task UpdateUserAsync(int id);
         Task DeleteByIdAsync(int id);
     }

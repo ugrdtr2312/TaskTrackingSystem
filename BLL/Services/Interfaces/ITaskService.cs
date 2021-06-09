@@ -7,7 +7,7 @@ namespace BLL.Services.Interfaces
     public interface ITaskService
     {
         Task<IEnumerable<TaskDto>> GetAllTasksByProjectIdAsync(int projectId, int userId);
-        Task RemoveAsync(int taskId, int userId);
+        Task<int> RemoveAsync(int taskId, int userId);
         // Task<ProjectDto> GetByIdAsync(int id);
         // Task<ProjectDto> CreateAsync(ProjectCreateDto projectDto, int userId);
         // Task UpdateAsync(ProjectDto projectDto, int userId);

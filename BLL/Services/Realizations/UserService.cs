@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,6 +9,7 @@ using BLL.Services.Interfaces;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Shared.Roles;
+using TaskStatus = Shared.Enums.TaskStatus;
 
 namespace BLL.Services.Realizations
 {
@@ -21,10 +23,19 @@ namespace BLL.Services.Realizations
             _uow = uow;
             _mapper = mapper;
         }
-        
-        public Task<IEnumerable<UserDto>> GetUsersAsync()
+
+
+        public async Task<IEnumerable<UserOfProjectDto>> GetUsersOfProjectAsync(int projectId, int userId)
         {
-            throw new System.NotImplementedException();
+            var project = await _uow.Projects.GetByIdAsync(projectId);
+            
+            if (project == null)
+                throw new DbQueryResultNullException("No project with this id");
+
+            if (project.Users.All(user => user.Id != userId))
+                throw new IdentityException("Only manager of this project can get them");
+
+            return _mapper.Map<IEnumerable<UserOfProjectDto>>(project.Users);
         }
 
         public async Task<IEnumerable<UserIsInProjectDto>> GetUsersForProjectUsersAsync(int projectId, int userId)
@@ -70,19 +81,68 @@ namespace BLL.Services.Realizations
             return users.ToArray();
         }
 
-        public Task ChangeUserRoleAsync(string id)
+        public async Task<IEnumerable<UserRoleDto>> GetUsersAndManagersAsync()
         {
-            throw new System.NotImplementedException();
+            var users = await _uow.UserManager.Users.ToListAsync();
+            var usersAndManagers = new List<UserRoleDto>();
+
+            foreach (var user in users)
+            {
+                var roles = await _uow.UserManager.GetRolesAsync(user);
+                if (roles[0] == RoleTypes.User || roles[0] == RoleTypes.Manager)
+                    usersAndManagers.Add(new UserRoleDto()
+                    {
+                        FullName = $"{user.Surname} {user.FirstName}",
+                        Id = user.Id,
+                        Role = roles[0]
+                    });
+            }
+
+            return usersAndManagers;
         }
+
+        public async Task SetUserRoleAsync(UserRoleDto userRoleDto)
+        {
+            var user = await _uow.UserManager.Users.FirstOrDefaultAsync(u => u.Id == userRoleDto.Id);
+
+            if (user == null)
+                throw new DbQueryResultNullException("User doesn't exist");
+            
+            if (!string.Equals(userRoleDto.Role, RoleTypes.User) && !string.Equals(userRoleDto.Role, RoleTypes.Manager))
+                throw new InvalidDataException("User role is invalid");
+
+            if (await _uow.UserManager.IsInRoleAsync(user, userRoleDto.Role))
+                throw new InvalidDataException("User is in this role already");
+
+            var userRoles = await _uow.UserManager.GetRolesAsync(user);
+            await _uow.UserManager.RemoveFromRolesAsync(user ,userRoles);
+            await _uow.UserManager.AddToRoleAsync(user, userRoleDto.Role);
+
+            await _uow.UserManager.UpdateAsync(user);
+        }
+
 
         public Task UpdateUserAsync(int id)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task DeleteByIdAsync(int id)
+        public async Task DeleteByIdAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var user = await _uow.UserManager.Users.Include(u => u.Tasks)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (user == null)
+                throw new DbQueryResultNullException("User doesn't exist");
+
+            foreach (var task in user.Tasks)
+            {
+                task.UserId = null;
+                if (task.TaskStatus == TaskStatus.InProgress)
+                    task.TaskStatus = TaskStatus.Open;
+            }
+
+            await _uow.UserManager.DeleteAsync(user);
         }
     }
 }

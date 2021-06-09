@@ -76,10 +76,10 @@ namespace API.Controllers
             _logger.LogInformation("Manager with Id {UserId} wants to remove project task id {TaskId}",
                 userId, id);
             
-            await _taskService.RemoveAsync(id, userId);
+            var taskUserId = await _taskService.RemoveAsync(id, userId);
             _logger.LogInformation("Manager with Id {UserId} removed task with id {TaskId} and all its tasks successfully",
                 userId, id);
-                
+            
             return NoContent();
         }
     }

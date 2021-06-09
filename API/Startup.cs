@@ -27,7 +27,7 @@ namespace API
                 .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true)
                 .AddNewtonsoftJson(options =>
                 {
-                    options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH':'mm";
+                    options.SerializerSettings.DateFormatString = "yyyy-MM-dd";
                 });
 
             services.AddBusinessDependencies(Configuration);
@@ -41,14 +41,14 @@ namespace API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public static void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app)
         {
             app.Migrate();
 
             // app.UseDefaultFiles();
             // app.UseStaticFiles();
 
-            app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(builder => builder.WithOrigins(Configuration["TokensSettings:Client_URL"]).AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthentication();
 

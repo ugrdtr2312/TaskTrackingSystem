@@ -11,7 +11,6 @@ using Shared.Roles;
 
 namespace API.Controllers
 {
-    // TODO: change comment below
     /// <summary>
     /// <c>ProjectsController</c> is a class.
     /// Contains all http methods for working with projects.
@@ -19,6 +18,7 @@ namespace API.Controllers
     /// <remarks>
     /// This class can get, create, remove, edit projects, add users to them, return statistics about tasks in project.
     /// </remarks>
+    /// <response code="400">Returns message if something had gone wrong</response>
     /// <response code="401">If token is invalid or it wasn't provided</response>
     /// <response code="403">If user doesn't have needed credentials</response>
     
@@ -44,7 +44,6 @@ namespace API.Controllers
         /// This method returns all projects
         /// </summary>
         /// <response code="200">Returns all projects</response>
-        /// <response code="400">Returns message if something had gone wrong</response>
 
         //GET api/projects
         [Authorize(Roles = RoleTypes.Admin)]
@@ -201,7 +200,6 @@ namespace API.Controllers
         /// This method remove user from project and sends email to this person
         /// </summary>
         /// <response code="204">Returns nothing, user was successfully removed from project</response>
-        /// <response code="400">Returns message if something had gone wrong</response>
 
         //POST api/projects/remove-user-from-project
         [Authorize(Roles = RoleTypes.Manager)]

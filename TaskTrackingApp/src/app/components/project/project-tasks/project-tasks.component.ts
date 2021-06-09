@@ -40,4 +40,8 @@ export class ProjectTasksComponent implements OnInit {
       )
     }
   }
+
+  populateForm(selectedRecord:Task){
+    this.service.formData =  Object.assign({}, selectedRecord);
+  }
 }

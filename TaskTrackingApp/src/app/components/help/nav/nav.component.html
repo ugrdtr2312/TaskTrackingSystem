@@ -3,13 +3,7 @@
     <a class="navbar-brand">TaskTrackingApp</a>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav" *ngIf="role === 'Admin'">
-        <a class="nav-item nav-link" routerLinkActive="active" href="/products">Products</a>
-        <a class="nav-item nav-link" routerLinkActive="active" href="/suppliers">Suppliers</a>
-        <a class="nav-item nav-link" routerLinkActive="active" href="/categories">Categories</a>
-        <a class="nav-item nav-link" routerLinkActive="active" href="/brands">Brands</a>
-        <a class="nav-item nav-link" routerLinkActive="active" href="/adminpanel">
-          Admin panel
-        </a>
+        <a class="nav-item nav-link" [routerLink]="['/home']" [routerLinkActive]="['active']">Admin panel</a>
       </div>
       <div class="navbar-nav" *ngIf="role === 'Manager'">
         <a class="nav-item nav-link" [routerLink]="['/home']" [routerLinkActive]="['active']">Projects</a>

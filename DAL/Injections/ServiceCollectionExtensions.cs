@@ -17,7 +17,7 @@ namespace DAL.Injections
                 options.UseSqlServer(connectionString,
                     o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
  
-            services.AddIdentity<User, UserRole>()
+            services.AddIdentity<User, UserRole>(options => options.User.RequireUniqueEmail = true)
                 .AddEntityFrameworkStores<TaskTrackingSystemContext>();
 
             services.AddScoped<DbContext, TaskTrackingSystemContext>();

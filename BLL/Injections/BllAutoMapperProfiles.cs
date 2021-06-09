@@ -23,6 +23,10 @@ namespace BLL.Injections
                     opt => opt.MapFrom(source => source.TaskPriority))
                 .ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, UserOfProjectDto>()
+                .ForMember(dest => dest.FullName, 
+                    opt => opt.MapFrom(source => $"{source.Surname} {source.FirstName}"))
+                .ReverseMap();
             CreateMap<User, RegistrationDto>().ReverseMap();
         }
     }

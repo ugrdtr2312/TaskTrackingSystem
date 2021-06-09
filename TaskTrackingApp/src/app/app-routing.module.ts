@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { ForbiddenComponent } from './components/help/forbidden/forbidden.component';
 import { HomeComponent } from './components/home/home.component';
 import { ProjectTasksComponent } from './components/project/project-tasks/project-tasks.component';
@@ -26,8 +25,7 @@ const routes: Routes = [
   {path:'statistic',component:StatisticComponent,canActivate:[AuthGuard],data :{permittedRoles:['User']}},
   {path: 'project/:id/users', component: ProjectUsersComponent,canActivate:[AuthGuard],data :{permittedRoles:['Manager']}},
   {path: 'project/:id/tasks', component: ProjectTasksComponent,canActivate:[AuthGuard],data :{permittedRoles:['User','Manager']}},
-  {path:'forbidden',component:ForbiddenComponent},
-  {path:'adminpanel',component:AdminPanelComponent,canActivate:[AuthGuard],data :{permittedRoles:['Admin']}}
+  {path:'forbidden',component:ForbiddenComponent}
 ];
 
 @NgModule({

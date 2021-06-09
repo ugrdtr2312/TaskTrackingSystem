@@ -1,2 +1,5 @@
-<app-project></app-project>
+
+{{ aaaa()}}
+<app-admin-panel *ngIf="role === 'Admin'"></app-admin-panel>
+<app-project *ngIf="role === 'User' || role === 'Manager'"></app-project>
   

@@ -85,7 +85,7 @@ namespace BLL.Services.Realizations
                 throw new InvalidDataException("Value of UserId in token can't be null or empty");
             
             var user = await _uow.UserManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
-
+            
             if (user == null)
                 throw new DbQueryResultNullException("User doesn't exist");
             
