@@ -54,15 +54,16 @@ namespace BLL.Services.Realizations
         }
 
         /// <summary>
-        /// Gives projects by id
+        /// Gives project by id
         /// </summary>
         /// <param name="id">Id of the project</param>
         /// <returns>Project</returns>
         /// <exception cref="InvalidDataException">Throws when id is invalid</exception>
-        /// <exception cref="DbQueryResultNullException">Throws when project wasn't find by id</exception>
+        /// <exception cref="DbQueryResultNullException">Throws when project wasn't found by id</exception>
         public async Task<ProjectDto> GetByIdAsync(int id)
         {
-            if (id <= 0) throw new InvalidDataException("Value of id must be positive");
+            if (id <= 0) 
+                throw new InvalidDataException("Value of id must be positive");
             
             var project =  await _uow.Projects.GetByIdAsync(id);
             
@@ -96,8 +97,8 @@ namespace BLL.Services.Realizations
                 throw new DbQueryResultNullException("This project wasn't created");
             
             project.Users = new List<User> {user};
-            
             _uow.Projects.Update(project);
+            
             if (!await _uow.SaveChangesAsync())
                 throw new DbQueryResultNullException("Manager wasn't added to project");
 
@@ -158,14 +159,13 @@ namespace BLL.Services.Realizations
                 throw new DbQueryResultNullException("This project wasn't removed");
         }
 
-        
         /// <summary>
         /// Adds new user to project
         /// </summary>
         /// <param name="userId">User id of person who wants to do this action</param>
-        /// <param name="userToProjectDto">User id and project id info</param>
-        /// <exception cref="DbQueryResultNullException">Throws when project doesn't exist or changes wasn't produced</exception>
-        /// <exception cref="IdentityException">Throws when user is not a manager of this project</exception>
+        /// <param name="userToProjectDto">User id and project for this action</param>
+        /// <exception cref="DbQueryResultNullException">Throws when project or user doesn't exist or changes wasn't produced</exception>
+        /// <exception cref="IdentityException">Throws when user is not a manager of this project or user is already in project</exception>
         /// <exception cref="InvalidDataException">Throws when user id is invalid</exception>
         public async Task AddUserToProjectAsync(UserToProjectDto userToProjectDto, int userId)
         {
@@ -199,9 +199,9 @@ namespace BLL.Services.Realizations
         /// Removes user from project, all not finished tasks become unsigned
         /// </summary>
         /// <param name="userId">User id of person who wants to do this action</param>
-        /// <param name="userToProjectDto">User id and project id info</param>
-        /// <exception cref="DbQueryResultNullException">Throws when project doesn't exist or changes wasn't produced</exception>
-        /// <exception cref="IdentityException">Throws when user is not a manager of this project</exception>
+        /// <param name="userToProjectDto">User id and project id for this action</param>
+        /// <exception cref="DbQueryResultNullException">Throws when project doesn't exist or removal wasn't produced</exception>
+        /// <exception cref="IdentityException">Throws when user is not a manager of this project or user isn't t in this project</exception>
         /// <exception cref="InvalidDataException">Throws when user id is invalid</exception>
         public async Task RemoveUserFromProjectAsync(UserToProjectDto userToProjectDto, int userId)
         {

@@ -63,7 +63,6 @@ namespace API.Controllers
         /// This method returns all projects for current user
         /// </summary>
         /// <response code="200">Returns all projects for current user</response>
-        /// <response code="400">Returns message if something had gone wrong</response>
         /// <response code="404">Returns message that nothing was found</response>
 
         //GET api/projects/current-user
@@ -83,7 +82,6 @@ namespace API.Controllers
         /// This method returns project that has an inputted Id property
         /// </summary>
         /// <response code="200">Returns project that has an inputted Id property</response>
-        /// <response code="400">Returns message if something had gone wrong</response>
 
         //GET api/projects/{id}
         [HttpGet("{id:int}", Name = "GetProjectById")]
@@ -99,7 +97,6 @@ namespace API.Controllers
         /// This method returns project that was created and path to it
         /// </summary>
         /// <response code="201">Returns project that was created and path to it</response>
-        /// <response code="400">Returns message if something had gone wrong</response>
 
         //POST api/projects
         [Authorize(Roles = RoleTypes.Manager)]
@@ -123,7 +120,6 @@ namespace API.Controllers
         /// This method changes project
         /// </summary>
         /// <response code="204">Returns nothing, project was successfully changed</response>
-        /// <response code="400">Returns message if something had gone wrong</response>
 
         //PUT api/projects
         [Authorize(Roles = RoleTypes.Manager)]
@@ -172,7 +168,6 @@ namespace API.Controllers
         /// This method adds user to project and sends email to this person
         /// </summary>
         /// <response code="204">Returns nothing, user was successfully added to project</response>
-        /// <response code="400">Returns message if something had gone wrong</response>
 
         //POST api/projects/add-user-to-project
         [Authorize(Roles = RoleTypes.Manager)]

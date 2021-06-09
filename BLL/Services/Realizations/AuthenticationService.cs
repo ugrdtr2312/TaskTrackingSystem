@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BLL.DTOs.User;
 using BLL.Exceptions;
-using BLL.HelpModels;
+using BLL.Injections.HelpModels;
 using BLL.Services.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
@@ -43,7 +43,7 @@ namespace BLL.Services.Realizations
             
             if (user == null)
                 throw new InvalidDataException("User with this login doesn't exist");
-            if ( !await _uow.UserManager.CheckPasswordAsync(user, loginDto.Password))
+            if (!await _uow.UserManager.CheckPasswordAsync(user, loginDto.Password))
                 throw new InvalidDataException("This password is incorrect");
 
             return await GenerateJwtToken(user);
@@ -65,8 +65,6 @@ namespace BLL.Services.Realizations
                 throw new InvalidDataException(result.Errors?.FirstOrDefault()?.Description);
 
             await _uow.UserManager.AddToRoleAsync(user, RoleTypes.User);
-            await _uow.SaveChangesAsync();
-            
             return _mapper.Map<UserDto>(user);
         }
         

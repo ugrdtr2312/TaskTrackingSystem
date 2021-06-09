@@ -1,4 +1,4 @@
-﻿namespace BLL.HelpModels
+﻿namespace BLL.Injections.HelpModels
 {
     public class TokensSettings
     {

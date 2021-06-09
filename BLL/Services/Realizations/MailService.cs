@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
+using BLL.DTOs.Mail;
 using BLL.DTOs.Project;
 using BLL.DTOs.User;
 using BLL.Exceptions;
-using BLL.Helpers.MailHelper.Entities;
-using BLL.HelpModels;
+using BLL.Injections.HelpModels;
 using BLL.Services.Interfaces;
 using DAL.Interfaces;
 using MailKit.Net.Smtp;
