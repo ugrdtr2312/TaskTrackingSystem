@@ -10,14 +10,14 @@ using Shared.Roles;
 
 namespace API.Controllers
 {
-    // TODO: change comment below
     /// <summary>
-    /// <c>ProjectsController</c> is a class.
-    /// Contains all http methods for working with projects.
+    /// <c>TasksController</c> is a class.
+    /// Contains all http methods for working with tasks.
     /// </summary>
     /// <remarks>
-    /// This class can get, create, remove, edit projects, add users to them, return statistics about tasks in project.
+    /// This class can get, create, remove, edit tasks, return statistics about them.
     /// </remarks>
+    /// <response code="400">Returns message if something had gone wrong</response>
     /// <response code="401">If token is invalid or it wasn't provided</response>
     /// <response code="403">If user doesn't have needed credentials</response>
     
@@ -43,7 +43,6 @@ namespace API.Controllers
         /// This method returns tasks that has an inputted ProjectId property
         /// </summary>
         /// <response code="200">Returns tasks that has an inputted ProjectId property</response>
-        /// <response code="400">Returns message if something had gone wrong</response>
         /// <response code="404">Returns message that nothing was found</response>
 
         //GET api/tasks/{id}

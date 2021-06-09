@@ -11,8 +11,9 @@ namespace API.Controllers
     /// Contains all http methods for working with authentication.
     /// </summary>
     /// <remarks>
-    /// This class avoid to logging in ang registration.
+    /// This class provides logging in and registration.
     /// </remarks>
+    /// <response code="400">Returns message if something had gone wrong</response>
     
     // api/authentication
     [Route("api/[controller]")]
@@ -35,7 +36,6 @@ namespace API.Controllers
         /// This method for logging in
         /// </summary>
         /// <response code="200">Returns token</response>
-        /// <response code="400">Returns message if something had gone wrong</response>
         
         // api/authentication/login
         [HttpPost("login")]
@@ -56,10 +56,10 @@ namespace API.Controllers
         /// This method for registration
         /// </summary>
         /// <response code="204">Returns nothing, registration was successful</response>
-        /// <response code="400">Returns message if something had gone wrong</response>
         
         // api/authentication/registration
         [HttpPost("registration")]
+        [ProducesResponseType(204)]
         public async Task<ActionResult> Register(RegistrationDto registrationDto)
         {
             var signedInUser = await _authenticationService.SignUpAsync(registrationDto);
