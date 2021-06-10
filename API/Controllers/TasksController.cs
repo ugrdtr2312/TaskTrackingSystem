@@ -107,7 +107,7 @@ namespace API.Controllers
         /// <summary>
         /// This method returns tasks that has an inputted ProjectId property
         /// </summary>
-        /// <response code="200">Returns tasks that has an inputted ProjectId property</response>
+        /// <response code="200">Returns tasks and percentage of completion that has an inputted ProjectId property</response>
         /// <response code="404">Returns message that nothing was found</response>
 
         //GET api/tasks/project/{id}
@@ -119,7 +119,7 @@ namespace API.Controllers
 
             var tasks = await _taskService.GetAllTasksByProjectIdAsync(id, userId);
 
-            if (!tasks.Any()) return NotFound();
+            if (!tasks.Tasks.Any()) return NotFound();
             return Ok(tasks);
         }
         

@@ -14,7 +14,7 @@ namespace API.Helpers
                 DbQueryResultNullException => new NotFoundObjectResult(context.Exception.Message),
                 IdentityException => new NotFoundObjectResult(context.Exception.Message),
                 _ => new BadRequestObjectResult(
-                    $"Unhandled error occured. {context.Exception}: {context.Exception.Message}")
+                    $"Unhandled error occured.")  // {context.Exception}: {context.Exception.Message}")
             };
             
             base.OnException(context);

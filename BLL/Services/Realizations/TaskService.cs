@@ -33,7 +33,7 @@ namespace BLL.Services.Realizations
         /// <returns>List of tasks</returns>
         /// <exception cref="InvalidDataException">Throws when user id is invalid</exception>
         /// <exception cref="DbQueryResultNullException">Throws when project wasn't find by id</exception>
-        public async Task<IEnumerable<TaskDto>> GetAllTasksByProjectIdAsync(int projectId, int userId)
+        public async Task<TasksOfProject> GetAllTasksByProjectIdAsync(int projectId, int userId)
         {
             if (userId == 0)
                 throw new InvalidDataException("Value of UserId in token can't be null or empty");
@@ -52,11 +52,23 @@ namespace BLL.Services.Realizations
             
             if (project.Users.All(u => u.Id != userId))
                 throw new IdentityException("Only user of this project can get them");
-            
+
+            var projectTasks = project.Tasks.ToList();
+
             if (await _uow.UserManager.IsInRoleAsync(user, RoleTypes.Manager))
-                return _mapper.Map<IEnumerable<TaskDto>>(project.Tasks);
-            
-            return _mapper.Map<IEnumerable<TaskDto>>(project.Tasks.Where(t => t.UserId == userId));
+                return new TasksOfProject()
+                {
+                    Tasks = _mapper.Map<IEnumerable<TaskDto>>(project.Tasks),
+                    PercentageOfCompletion = Math.Round((projectTasks.Count(t => t.TaskStatus is TaskStatus.Completed) 
+                                                        / (double)project.Tasks.Count(t => t.TaskStatus != TaskStatus.Cancelled)), 4) * 100
+                };
+           
+            return new TasksOfProject()
+            {
+                Tasks = _mapper.Map<IEnumerable<TaskDto>>(project.Tasks.Where(t => t.UserId == userId)),
+                PercentageOfCompletion = Math.Round((projectTasks.Count(t => t.TaskStatus is TaskStatus.Completed && t.UserId == userId)
+                                                    / (double)project.Tasks.Count(t=> t.UserId == userId && t.TaskStatus != TaskStatus.Cancelled)), 4) * 100
+            };
         }
 
         /// <summary>
