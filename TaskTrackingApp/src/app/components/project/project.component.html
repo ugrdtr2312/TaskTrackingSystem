@@ -5,8 +5,7 @@
         <table class="table">
             <thead class="thead-light"> 
                 <tr>
-                    <th class="col-sm-8" scope="col" [appSort]="service.list" data-order="desc" data-name="name">Project name</th>
-                    <th class="col-sm-1" scope="col"></th>
+                    <th class="col-sm-9" scope="col" [appSort]="service.list" data-order="desc" data-name="name">Project name</th>
                     <th class="col-sm-1" scope="col"></th>
                     <th class="col-sm-1" scope="col"></th>
                     <th class="col-sm-1" scope="col"></th>
@@ -19,9 +18,6 @@
                         <a [routerLink]="['/project', pr.id, 'tasks']">
                             <i class="fas fa-list-ul fa-lg text-dark"></i>
                         </a>
-                    </td>
-                    <td>
-                        <i class="fas fa-info-circle fa-lg text-warning" (click)="onDelete(pr.id)"></i>
                     </td>
                     <td>
                         <a [routerLink]="['/project', pr.id, 'users']">

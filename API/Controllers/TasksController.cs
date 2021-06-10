@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using BLL.DTOs.Task;
 using BLL.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -40,14 +41,78 @@ namespace API.Controllers
 
         
         /// <summary>
+        /// This method returns task that has an inputted Id property
+        /// </summary>
+        /// <response code="200">Returns task that has an inputted Id property</response>
+
+        //GET api/tasks/{id}
+        [HttpGet("{id:int}", Name = "GetTaskById")]
+        public async Task<IActionResult> GetTaskById(int id)
+        {
+            var userId = Convert.ToInt32(User.FindFirstValue("UserId"));
+            
+            var task = await _taskService.GetByIdAsync(id, userId);
+
+            return Ok(task);
+        }
+
+        
+        /// <summary>
+        /// This method returns task that was created and path to it
+        /// </summary>
+        /// <response code="201">Returns task that was created and path to it</response>
+
+        //POST api/tasks
+        [Authorize(Roles = RoleTypes.Manager)]
+        [HttpPost]
+        [ProducesResponseType(typeof(TaskDto), 201)]
+        public async Task<IActionResult> CreateTask(TaskDto taskDto)
+        {
+            var userId = Convert.ToInt32(User.FindFirstValue("UserId"));
+            _logger.LogInformation("Manager with Id {UserId} wants to create task", userId);
+            
+            var createdTask = await _taskService.CreateAsync(taskDto, userId);
+            _logger.LogInformation("Manager with Id {UserId} created task with id {TaskId}",
+                userId, createdTask.Id);
+            
+            //Fetch the task from data source
+            return CreatedAtRoute("GetTaskById", new {id = createdTask.Id}, createdTask);
+        }
+
+
+        /// <summary>
+        /// This method changes task
+        /// </summary>
+        /// <response code="204">Returns nothing, task was successfully changed</response>
+
+        //PUT api/tasks
+        [Authorize(Roles = RoleTypes.User+","+RoleTypes.Manager)]
+        [HttpPut]
+        [ProducesResponseType(204)]
+        public async Task<IActionResult> UpdateTask(TaskDto taskDto)
+        {
+            var userId = Convert.ToInt32(User.FindFirstValue("UserId"));
+            _logger.LogInformation("User with Id {UserId} wants to change task with id {TaskId}",
+                userId, taskDto.Id);
+
+            await _taskService.UpdateAsync(taskDto, userId);
+
+            _logger.LogInformation("User with Id {UserId} changed task with id {TaskId} successfully",
+                userId, taskDto.Id);
+
+            return NoContent();
+        }
+        
+
+        /// <summary>
         /// This method returns tasks that has an inputted ProjectId property
         /// </summary>
         /// <response code="200">Returns tasks that has an inputted ProjectId property</response>
         /// <response code="404">Returns message that nothing was found</response>
 
-        //GET api/tasks/{id}
+        //GET api/tasks/project/{id}
         [Authorize(Roles = RoleTypes.User+","+RoleTypes.Manager)]
-        [HttpGet("{id:int}", Name = "GetTasksByProjectId")]
+        [HttpGet("project/{id:int}")]
         public async Task<IActionResult> GetTasksByProjectId(int id)
         {
             var userId = Convert.ToInt32(User.FindFirstValue("UserId"));

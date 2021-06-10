@@ -15,7 +15,7 @@ export class TaskService {
   listOfProjectUsers:UserOfProject[];
 
   refreshList(projectId: number){
-    this.http.get(`/api/tasks/${projectId}`).toPromise()
+    this.http.get(`/api//Tasks/project/${projectId}`).toPromise()
     .then(res => this.list = res as Task[]);
     this.http.get(`api/users/users-of-project/${projectId}`).toPromise()
     .then(res => this.listOfProjectUsers = res as UserOfProject[]);
@@ -23,5 +23,9 @@ export class TaskService {
 
   deleteTask(id:number){
     return this.http.delete(`/api/tasks/${id}`)
+  }
+
+  postTask() {
+    return this.http.post('/api/tasks', this.formData);
   }
 }

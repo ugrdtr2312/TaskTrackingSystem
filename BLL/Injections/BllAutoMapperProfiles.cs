@@ -14,6 +14,12 @@ namespace BLL.Injections
             CreateMap<Project, ProjectCreateDto>().ReverseMap();
             
             CreateMap<Task, TaskDto>()
+                .ForMember(dest => dest.Deadline, 
+                    opt => opt.MapFrom(source => source.Deadline.ToString("yyyy-MM-dd")))
+                .ForMember(dest => dest.LastUpdate, 
+                    opt => opt.MapFrom(source => source.LastUpdate.ToString("yyyy-MM-dd")))
+                .ForMember(dest => dest.CreationDate, 
+                    opt => opt.MapFrom(source => source.CreationDate.ToString("yyyy-MM-dd")))
                 .ForMember(dest => dest.TaskStatus, 
                     opt => opt.MapFrom(source => source.TaskStatus.ToString()))
                 .ForMember(dest => dest.TaskStatusId, 

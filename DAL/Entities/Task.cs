@@ -8,7 +8,7 @@ namespace DAL.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime CreationDate { get; set; }
-        public DateTime? LastUpdate { get; set; }
+        public DateTime LastUpdate { get; set; }
         public DateTime Deadline { get; set; }
         public TaskStatus TaskStatus { get; set; }
         public TaskPriority TaskPriority { get; set; }

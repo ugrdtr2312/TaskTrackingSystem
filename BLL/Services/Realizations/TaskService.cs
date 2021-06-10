@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using BLL.DTOs.Project;
 using BLL.DTOs.Task;
 using BLL.Exceptions;
 using BLL.Services.Interfaces;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Shared.Enums;
 using Shared.Roles;
+using TaskStatus = Shared.Enums.TaskStatus;
 
 namespace BLL.Services.Realizations
 {
@@ -49,10 +50,164 @@ namespace BLL.Services.Realizations
             if (project == null)
                 throw new DbQueryResultNullException("This project wasn't found");
             
+            if (project.Users.All(u => u.Id != userId))
+                throw new IdentityException("Only user of this project can get them");
+            
             if (await _uow.UserManager.IsInRoleAsync(user, RoleTypes.Manager))
                 return _mapper.Map<IEnumerable<TaskDto>>(project.Tasks);
             
             return _mapper.Map<IEnumerable<TaskDto>>(project.Tasks.Where(t => t.UserId == userId));
+        }
+
+        /// <summary>
+        /// Gives task by id
+        /// </summary>
+        /// <param name="id">Id of the task</param>
+        /// <param name="userId">User id of person who wants to do this action</param>
+        /// <returns>Task</returns>
+        /// <exception cref="InvalidDataException">Throws when id is invalid</exception>
+        /// <exception cref="IdentityException">Throws when user is not a manager or user of this task</exception>
+        /// <exception cref="DbQueryResultNullException">Throws when user or task weren't found</exception>
+        public async Task<TaskDto> GetByIdAsync(int id, int userId)
+        {
+            if (userId == 0)
+                throw new InvalidDataException("Value of UserId in token can't be null or empty");
+            
+            var user = await _uow.UserManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+                throw new DbQueryResultNullException("User doesn't exist");
+            
+            if (id <= 0) 
+                throw new InvalidDataException("Value of task id must be positive");
+            
+            var task =  await _uow.Tasks.GetByIdAsync(id);
+            
+            if (task == null)
+                throw new DbQueryResultNullException("This task wasn't found");
+
+            if (await _uow.UserManager.IsInRoleAsync(user, RoleTypes.Manager) || userId == task.Id)
+                return _mapper.Map<TaskDto>(task);
+            
+            throw new IdentityException("Only user or manager of this task can get it");
+        }
+
+        /// <summary>
+        /// Adds new project
+        /// </summary>
+        /// <param name="taskDto">Task</param>
+        /// <param name="userId">User id of person who wants to do this action</param>
+        /// <exception cref="DbQueryResultNullException">Throws when task wasn't saved or project doesn't exist</exception>
+        /// <exception cref="IdentityException">Throws when user is not a manager of this project</exception>
+        /// <exception cref="InvalidDataException">Throws when data is invalid</exception>
+        public async Task<TaskDto> CreateAsync(TaskDto taskDto, int userId)
+        {
+            if (userId == 0)
+                throw new InvalidDataException("Value of UserId in token can't be null or empty");
+
+            var project =  await _uow.Projects.GetByIdAsync(taskDto.ProjectId);
+            
+            if (project == null)
+                throw new DbQueryResultNullException("This project wasn't found");
+            
+            if (project.Users.All(u => u.Id != userId))
+                throw new IdentityException("Only manager of this project can add new task");
+
+            if(!Enum.IsDefined(typeof(TaskStatus), taskDto.TaskStatusId))
+                throw new InvalidDataException("Incorrect TaskStatusId");
+            
+            if(!Enum.IsDefined(typeof(TaskPriority), taskDto.TaskPriorityId))
+                throw new InvalidDataException("Incorrect TaskPriorityId");
+
+            if (taskDto.UserId != null)
+            {
+                var user = await _uow.UserManager.Users.FirstOrDefaultAsync(u => u.Id == taskDto.UserId);
+                if (user == null)
+                    throw new DbQueryResultNullException("User doesn't exist");
+            }
+            
+            var task = _mapper.Map<DAL.Entities.Task>(taskDto);
+
+            await _uow.Tasks.CreateAsync(task);
+            
+            if (!await _uow.SaveChangesAsync())
+                throw new DbQueryResultNullException("This task wasn't created");
+            
+            return _mapper.Map<TaskDto>(task);
+        }
+
+        /// <summary>
+        /// Changes task info
+        /// </summary>
+        /// <param name="taskDto">Task</param>
+        /// <param name="userId">User id of person who wants to do this action</param>
+        /// <exception cref="DbQueryResultNullException">Throws when task wasn't saved or project doesn't exist</exception>
+        /// <exception cref="IdentityException">Throws when user is not a manager of this project</exception>
+        /// <exception cref="InvalidDataException">Throws when data is invalid</exception>
+        public async Task UpdateAsync(TaskDto taskDto, int userId)
+        {
+            if (userId == 0)
+                throw new InvalidDataException("Value of UserId in token can't be null or empty");
+            
+            if(!Enum.IsDefined(typeof(TaskStatus), taskDto.TaskStatusId))
+                throw new InvalidDataException("Incorrect TaskStatusId");
+
+            var user = await _uow.UserManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            
+            if (user != null)
+            {
+                if (await _uow.UserManager.IsInRoleAsync(user, RoleTypes.User) && userId == taskDto.UserId)
+                {
+                    var task =  await _uow.Tasks.GetByIdAsync(taskDto.Id);
+
+                    if (task == null)
+                        throw new DbQueryResultNullException("This task wasn't found");
+
+                    task.TaskStatus = (TaskStatus)taskDto.TaskStatusId;
+                    _uow.Tasks.Update(task);
+                }
+                else if (await _uow.UserManager.IsInRoleAsync(user, RoleTypes.Manager))
+                {
+                    var project = await _uow.Projects.GetByIdAsync(taskDto.ProjectId);
+
+                    if (project == null)
+                        throw new DbQueryResultNullException("This project wasn't found");
+
+                    if (project.Users.All(u => u.Id != userId))
+                        throw new IdentityException("Only user of this project can add new task");
+
+                    if (!Enum.IsDefined(typeof(TaskPriority), taskDto.TaskPriorityId))
+                        throw new InvalidDataException("Incorrect TaskPriorityId");
+
+                    if (taskDto.UserId != null)
+                    {
+                        var userOfProject = await _uow.UserManager.Users.FirstOrDefaultAsync(u => u.Id == taskDto.UserId);
+                        if (userOfProject == null)
+                            throw new DbQueryResultNullException("Can't assign task to person that doesn't exists");
+
+                        if (project.Users.All(u => u.Id != userId))
+                            throw new IdentityException("Can't assign task to person that doesn't exists in this project");
+                    }
+
+                    var task = await _uow.Tasks.GetByIdAsync(taskDto.Id);
+                    if (task == null)
+                        throw new DbQueryResultNullException("This task wasn't found");
+
+                    var taskToUpdate = _mapper.Map<DAL.Entities.Task>(taskDto);
+
+                    task.Name = taskToUpdate.Name;
+                    task.Description = taskToUpdate.Description;
+                    task.Deadline = taskToUpdate.Deadline;
+                    task.LastUpdate = DateTime.Now;
+                    task.UserId = taskToUpdate.UserId;
+                    task.TaskStatus = (TaskStatus) taskDto.TaskStatusId;
+                    task.TaskPriority = (TaskPriority) taskDto.TaskPriorityId;
+
+                    _uow.Tasks.Update(task);
+                }
+            }
+            
+            if (!await _uow.SaveChangesAsync())
+                throw new DbQueryResultNullException("This task wasn't updated");
         }
 
         /// <summary>
@@ -85,40 +240,5 @@ namespace BLL.Services.Realizations
             return Convert.ToInt32(task.UserId);
         }
 
-
-        // public Task<IEnumerable<TaskDto>> GetAllTasksOfUserByProjectIdAsync(int projectId, int userId)
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public Task<ProjectDto> GetByIdAsync(int id)
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public Task<ProjectDto> CreateAsync(ProjectCreateDto projectDto, int userId)
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public Task UpdateAsync(ProjectDto projectDto, int userId)
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public Task RemoveAsync(int projectId, int userId)
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public Task AddUserToProjectAsync(UserToProjectDto userToProjectDto, int userId)
-        // {
-        //     throw new System.NotImplementedException();
-        // }
-        //
-        // public Task RemoveUserFromProjectAsync(UserToProjectDto userToProjectDto, int userId)
-        // {
-        //     throw new System.NotImplementedException();
-        // }
     }
 }
