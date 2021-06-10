@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
 {
-    public partial class Hopethatitsfinalbeforethiswerealotoftrashmigrations : Migration
+    public partial class Finalcleanmigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -179,7 +179,7 @@ namespace DAL.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    LastUpdate = table.Column<DateTime>(type: "datetime2", nullable: true, defaultValueSql: "getdate()"),
+                    LastUpdate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
                     Deadline = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TaskStatus = table.Column<int>(type: "int", nullable: false),
                     TaskPriority = table.Column<int>(type: "int", nullable: false),
@@ -232,9 +232,9 @@ namespace DAL.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { 1, "b8c86c69-5d9d-424b-9850-afdc81c30c38", "Admin", "ADMIN" },
-                    { 2, "32d350dd-0dc2-4b6d-95f3-8ad966df2236", "Manager", "MANAGER" },
-                    { 3, "45f6eca1-06f3-491f-a4f9-bbb7da6dfa3e", "User", "USER" }
+                    { 1, "7a3c9da8-5ec1-4d42-b4d0-8427d5101a31", "Admin", "ADMIN" },
+                    { 2, "54eba1d3-5c2d-44c5-901a-5f91b5ae9ea3", "Manager", "MANAGER" },
+                    { 3, "c72785d4-5d8d-4a22-a6b8-e46585b65614", "User", "USER" }
                 });
 
             migrationBuilder.InsertData(
@@ -242,10 +242,10 @@ namespace DAL.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Surname", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { 1, 0, "28db485a-58c5-4d17-922f-565f62d7cd89", "vladimir231200@gmail.com", true, "Vladimir", false, null, "VLADIMIR231200@GMAIL.COM", "UGRDTR", "AQAAAAEAACcQAAAAEK8MSrQ77pE79CDWexx5mIFLIH9+TWnBPsiBZoQwA2R4CIjtIhCRhvUdSYSkiXm5lw==", null, false, "93819f85-ad68-45a9-b89a-55a0218f911c", "Shengeliya", false, "ugrdtr" },
-                    { 2, 0, "103b4eef-f765-49e4-b279-9c97d9a2c57f", "ns18091@gmail.com", true, "Nikita", false, null, "NS18091@GMAIL.COM", "MXXNR1SE", "AQAAAAEAACcQAAAAECahqnejvCvM0UW+9AzRoHpukFIo13txuwWv5LE9J4yg55ZPgSHYjfA+Du+yl3GGTQ==", null, false, "c4ba0538-e977-45fe-ad06-8c428c8aca5d", "Sidorov", false, "mxxnr1se" },
-                    { 3, 0, "342c49e2-8704-42bb-afe7-e8ddbde90707", "kochka4real@gmail.com", true, "Danila", false, null, "KOCHKA4REAL@GMAIL.COM", "AOLAN13", "AQAAAAEAACcQAAAAEG5Se7D+w9cjKKzQLpGpunUNMaIjTz7ft+36m/p8HrV1SSzEc1sXdVkLxC79BDPxFg==", null, false, "ee7916a3-67e6-402d-a5ca-bfbd9b0106e4", "Crazy", false, "Aolan13" },
-                    { 4, 0, "985c9269-7f80-4ec7-b11b-82d313c0dcff", "janglaide@gmail.com", true, "Alison", false, null, "JANGLAIDE@GMAIL.COM", "JANGLAIDE", "AQAAAAEAACcQAAAAEJA3Zp/vA1UfXKBc9JwlYDvgkdYVUjFLD8fKwBwWRub9Lh57l0S483cPd3xQC5MXKg==", null, false, "6c99d826-028a-475e-9d7a-813cca374e94", "Proshchenko", false, "janglaide" }
+                    { 1, 0, "482111d5-c26f-4272-805d-6e670db82993", "vladimir231200@gmail.com", true, "Vladimir", false, null, "VLADIMIR231200@GMAIL.COM", "UGRDTR", "AQAAAAEAACcQAAAAEJVj7A9IQD0RkezK+3g3kT7UQlUnnsSrgtaNX6fEucs07FO60Ug6flZA+3YaZksn1Q==", null, false, "8bb1460e-376d-4b2a-97d2-fbb06498708d", "Shengeliya", false, "ugrdtr" },
+                    { 2, 0, "9bb7011f-e806-4765-8130-9c8a2bd0e94c", "ns18091@gmail.com", true, "Nikita", false, null, "NS18091@GMAIL.COM", "MXXNR1SE", "AQAAAAEAACcQAAAAEF69I8BqQ9T7pJN3MY82N15JmWUT1OlK8Jf0LpPwubR1sSI0/4rvPzgKgkAemCz/xA==", null, false, "7d62f970-f4d9-4d02-9b9d-a7fb923a448f", "Sidorov", false, "mxxnr1se" },
+                    { 3, 0, "24d96725-980b-4253-a406-05b4becfb6a7", "kochka4real@gmail.com", true, "Danila", false, null, "KOCHKA4REAL@GMAIL.COM", "AOLAN13", "AQAAAAEAACcQAAAAEAkulZrCOeJaoq9p3oum/w4Si5/DFglXX7r8QAC6o5BMn5DZ0vUpWgXchb1Re5xk1A==", null, false, "5d2c0322-e5e7-4a6b-8453-8b572cbe0a36", "Crazy", false, "Aolan13" },
+                    { 4, 0, "b84e9603-0665-41d5-8a10-12ca3b25b943", "janglaide@gmail.com", true, "Alison", false, null, "JANGLAIDE@GMAIL.COM", "JANGLAIDE", "AQAAAAEAACcQAAAAEAWYsUqkNa+eI6hAdSFdgJGKQk/R6RlyDWCqvuM2UDSpsAlAm4J5ITHiYr2GZw0NrQ==", null, false, "9c5d5abd-34fa-4218-84c8-b077ae069b22", "Proshchenko", false, "janglaide" }
                 });
 
             migrationBuilder.InsertData(
@@ -274,18 +274,18 @@ namespace DAL.Migrations
                 columns: new[] { "Id", "Deadline", "Description", "Name", "ProjectId", "TaskPriority", "TaskStatus", "UserId" },
                 values: new object[,]
                 {
-                    { 11, new DateTime(2021, 6, 14, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1964), "Task11 description", "Task11", 1, 2, 5, 2 },
-                    { 9, new DateTime(2021, 6, 9, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1940), "Task9 description", "Task9", 1, 4, 2, 2 },
-                    { 6, new DateTime(2021, 6, 12, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1905), "Task6 description", "Task6", 1, 3, 3, 2 },
-                    { 5, new DateTime(2021, 6, 10, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1894), "Task5 description", "Task5", 1, 1, 1, 2 },
-                    { 8, new DateTime(2021, 6, 13, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1929), "Task8 description", "Task8", 1, 4, 1, 2 },
-                    { 12, new DateTime(2021, 6, 12, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1975), "Task12 description", "Task12", 1, 3, 2, 1 },
-                    { 10, new DateTime(2021, 6, 11, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1951), "Task10 description", "Task10", 1, 1, 4, 1 },
-                    { 7, new DateTime(2021, 6, 11, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1917), "Task7 description", "Task7", 1, 2, 1, 1 },
-                    { 4, new DateTime(2021, 6, 14, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1883), "Task4 description", "Task4", 1, 2, 2, 1 },
-                    { 3, new DateTime(2021, 6, 9, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1864), "Task3 description", "Task3", 1, 3, 3, 1 },
-                    { 2, new DateTime(2021, 6, 12, 19, 53, 28, 908, DateTimeKind.Local).AddTicks(1753), "Task2 description", "Task2", 1, 1, 2, 1 },
-                    { 1, new DateTime(2021, 6, 11, 19, 53, 28, 902, DateTimeKind.Local).AddTicks(8658), "Task1 description", "Task1", 1, 2, 1, 1 }
+                    { 11, new DateTime(2021, 6, 16, 16, 41, 57, 427, DateTimeKind.Local).AddTicks(49), "Task11 description", "Task11", 1, 2, 5, 2 },
+                    { 9, new DateTime(2021, 6, 11, 16, 41, 57, 427, DateTimeKind.Local).AddTicks(43), "Task9 description", "Task9", 1, 4, 2, 2 },
+                    { 6, new DateTime(2021, 6, 14, 16, 41, 57, 427, DateTimeKind.Local).AddTicks(34), "Task6 description", "Task6", 1, 3, 3, 2 },
+                    { 5, new DateTime(2021, 6, 12, 16, 41, 57, 427, DateTimeKind.Local).AddTicks(31), "Task5 description", "Task5", 1, 1, 1, 2 },
+                    { 8, new DateTime(2021, 6, 15, 16, 41, 57, 427, DateTimeKind.Local).AddTicks(40), "Task8 description", "Task8", 1, 4, 1, 2 },
+                    { 12, new DateTime(2021, 6, 14, 16, 41, 57, 427, DateTimeKind.Local).AddTicks(52), "Task12 description", "Task12", 1, 3, 2, 1 },
+                    { 10, new DateTime(2021, 6, 13, 16, 41, 57, 427, DateTimeKind.Local).AddTicks(46), "Task10 description", "Task10", 1, 1, 4, 1 },
+                    { 7, new DateTime(2021, 6, 13, 16, 41, 57, 427, DateTimeKind.Local).AddTicks(37), "Task7 description", "Task7", 1, 2, 1, 1 },
+                    { 4, new DateTime(2021, 6, 16, 16, 41, 57, 427, DateTimeKind.Local).AddTicks(28), "Task4 description", "Task4", 1, 2, 2, 1 },
+                    { 3, new DateTime(2021, 6, 11, 16, 41, 57, 427, DateTimeKind.Local).AddTicks(23), "Task3 description", "Task3", 1, 3, 3, 1 },
+                    { 2, new DateTime(2021, 6, 14, 16, 41, 57, 426, DateTimeKind.Local).AddTicks(9996), "Task2 description", "Task2", 1, 1, 2, 1 },
+                    { 1, new DateTime(2021, 6, 13, 16, 41, 57, 424, DateTimeKind.Local).AddTicks(6216), "Task1 description", "Task1", 1, 2, 1, 1 }
                 });
 
             migrationBuilder.InsertData(

@@ -8,11 +8,14 @@ import { UserRole } from './user-role.model';
   providedIn: 'root'
 })
 export class UserService {
-
-  constructor(private fb: FormBuilder, private http: HttpClient) { }
+  
+  role: string | undefined
   listOfUsersInProject: UserInProject[];
   listOfUsersAndManagers: UserRole[];
   userRoleFormData: UserRole = new UserRole();
+
+  constructor(private fb: FormBuilder, private http: HttpClient) { }
+  
 
   formModel = this.fb.group({
     UserName: ['', Validators.required],
@@ -67,6 +70,16 @@ export class UserService {
 
   removeUser(userId: number) {
     return this.http.delete(`/api/Users/${userId}`);
+  }
+
+  defineRole(){
+    localStorage.getItem('token') !== null;
+    if (localStorage.getItem('token') !== null) {
+      if(this.roleMatch(['Admin'])) this.role = 'Admin'
+      if(this.roleMatch(['Manager'])) this.role = 'Manager'
+      if(this.roleMatch(['User'])) this.role = 'User'
+    }
+    console.log(this.role)
   }
 
   roleMatch(allowedRoles: any[]): boolean {

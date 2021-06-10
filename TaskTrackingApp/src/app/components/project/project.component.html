@@ -1,5 +1,4 @@
-{{aaaa()}}
-<div class="row pt-4"  *ngIf="role === 'Manager'">
+<div class="row pt-4"  *ngIf="this.userService.role === 'Manager'">
     <div class="col-md-8">
         <input type="search" class="form-control form-control-lg" placeholder="Search..."  [(ngModel)]=serach><br>
         <table class="table">
@@ -36,7 +35,7 @@
     </div>
 </div>
 
-<div class="row pt-4"  *ngIf="role === 'User'">
+<div class="row pt-4"  *ngIf="this.userService.role === 'User'">
         <input type="search" class="form-control form-control-lg" placeholder="Search..."  [(ngModel)]=serach><br>
         <table class="table mt-3">
             <thead class="thead-light"> 
@@ -48,9 +47,11 @@
             <tbody>
                 <tr *ngFor="let pr of service.list | filter: serach">
                     <td (click)="populateForm(pr)">{{pr.name}}</td>
-                    <a [routerLink]="['/project', pr.id, 'tasks']">
-                        <i class="fas fa-list-ul fa-lg text-dark"></i>
-                    </a>
+                    <td>
+                        <a [routerLink]="['/project', pr.id, 'tasks']">
+                            <i class="fas fa-list-ul fa-lg text-dark"></i>
+                        </a>
+                    </td>
                 </tr>
             </tbody>
         </table>

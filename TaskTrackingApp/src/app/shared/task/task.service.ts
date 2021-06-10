@@ -14,11 +14,16 @@ export class TaskService {
   list:Task[];
   listOfProjectUsers:UserOfProject[];
 
-  refreshList(projectId: number){
-    this.http.get(`/api//Tasks/project/${projectId}`).toPromise()
+  refreshListManager(projectId: number){
+    this.http.get(`/api/Tasks/project/${projectId}`).toPromise()
     .then(res => this.list = res as Task[]);
     this.http.get(`api/users/users-of-project/${projectId}`).toPromise()
     .then(res => this.listOfProjectUsers = res as UserOfProject[]);
+  }
+
+  refreshListUser(projectId: number){
+    this.http.get(`/api/Tasks/project/${projectId}`).toPromise()
+    .then(res => this.list = res as Task[]);
   }
 
   deleteTask(id:number){
@@ -27,5 +32,11 @@ export class TaskService {
 
   postTask() {
     return this.http.post('/api/tasks', this.formData);
+  }
+
+  putTask() {
+    if (this.formData.userId == "null")
+      this.formData.userId = null;
+    return this.http.put('/api/tasks', this.formData);
   }
 }

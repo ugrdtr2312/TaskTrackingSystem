@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { UserRole } from 'src/app/shared/user/user-role.model';
 import { UserService } from 'src/app/shared/user/user.service';
@@ -9,10 +9,15 @@ import { UserService } from 'src/app/shared/user/user.service';
   styles: [
   ]
 })
-export class AdminPanelComponent implements OnInit {
+
+export class AdminPanelComponent implements OnInit, OnDestroy {
   serach: string;
 
   constructor(public service:UserService, private toastr:ToastrService) { }
+  
+  ngOnDestroy(): void {
+    this.service.listOfUsersAndManagers.length = 0;
+  }
 
   ngOnInit(): void {
     this.service.usersAndManagers();

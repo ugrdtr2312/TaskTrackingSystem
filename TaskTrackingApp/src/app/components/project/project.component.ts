@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Project } from 'src/app/shared/project/project.model';
 import { ProjectService } from 'src/app/shared/project/project.service';
+import { UserService } from 'src/app/shared/user/user.service';
 
 @Component({
   selector: 'app-project',
@@ -10,9 +11,9 @@ import { ProjectService } from 'src/app/shared/project/project.service';
   ]
 })
 export class ProjectComponent implements OnInit {
+  
   serach:string;
-  role: string | null;
-  constructor(public service:ProjectService, private toastr:ToastrService) { }
+  constructor(public service:ProjectService, public userService:UserService, private toastr:ToastrService) { }
 
   ngOnInit(): void {
     this.service.refreshList();
@@ -38,9 +39,5 @@ export class ProjectComponent implements OnInit {
         }
       )
     }
-  }
-
-  aaaa(){
-    this.role = localStorage.getItem("role")
   }
 }

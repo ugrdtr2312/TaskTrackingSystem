@@ -188,7 +188,7 @@ namespace BLL.Services.Realizations
                             throw new IdentityException("Can't assign task to person that doesn't exists in this project");
                     }
 
-                    var task = await _uow.Tasks.GetByIdAsync(taskDto.Id);
+                    var task = await _uow.Tasks.GetByIdAsyncAsTracking(taskDto.Id);
                     if (task == null)
                         throw new DbQueryResultNullException("This task wasn't found");
 

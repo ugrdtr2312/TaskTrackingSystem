@@ -8,15 +8,11 @@ import { UserService } from 'src/app/shared/user/user.service';
   styles: []
 })
 export class HomeComponent implements OnInit {
-  role: string| null;
+  
   isLogged: boolean;
-  constructor(private router: Router, private service: UserService) { }
+  constructor(private router: Router, public service: UserService) { }
 
   ngOnInit() {
   }
 
-  aaaa(){
-    this.isLogged = localStorage.getItem('token') !== null;
-    this.role = localStorage.getItem("role")
-  }
 }

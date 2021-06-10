@@ -12,20 +12,16 @@ export class NavComponent implements OnInit {
   isLogged : boolean | undefined
   role: string | null;
 
-  constructor(private router: Router, private service: UserService) {
+  constructor(private router: Router, public service: UserService) {
   }
   
   ngOnInit() {
-  }
-
-  aaaa(){
-    this.isLogged = localStorage.getItem('token') !== null;
-    this.role = localStorage.getItem("role")
+    this.service.defineRole();
   }
 
   onLogout() {
     localStorage.removeItem('token');
-    localStorage.removeItem('role');
+    this.service.role = undefined
     this.router.navigate(['/user/login']);
   }
 }
