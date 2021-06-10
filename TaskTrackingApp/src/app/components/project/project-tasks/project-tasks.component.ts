@@ -20,7 +20,8 @@ export class ProjectTasksComponent implements OnInit, OnDestroy {
     public userService:UserService, private toastr:ToastrService) { }
   
   ngOnDestroy(): void {
-    this.service.list.length = 0;
+    if (this.service.list != undefined) this.service.list.length = 0;
+    this.service.percentageOfCompletion = 0;
     if (this.service.listOfProjectUsers != undefined) this.service.listOfProjectUsers.length = 0;
   }
 

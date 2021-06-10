@@ -37,6 +37,12 @@
 <div class="row pt-4" *ngIf="this.userService.role === 'User'">
     <div class="col-md-8">
     <input type="search" class="form-control form-control-lg" placeholder="Search..."  [(ngModel)]=serach><br>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="service.percentageOfCompletion.toFixed(2)" aria-valuemin="0" aria-valuemax="100"
+         [ngStyle]="{width: service.percentageOfCompletion.toFixed(2) + '%'}">
+        {{service.percentageOfCompletion.toFixed(2)}}%
+        </div>
+    </div>
     <table class="table mt-3">
         <thead class="thead-light"> 
             <tr>
